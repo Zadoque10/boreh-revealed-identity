@@ -1,10 +1,10 @@
 import { motion } from "framer-motion";
+import { toast } from "sonner";
 
 const Footer = () => {
   const socialLinks = [
-    { name: "Instagram", url: "#" },
-    { name: "TikTok", url: "#" },
-    { name: "YouTube", url: "#" },
+    { name: "Instagram", url: "https://www.instagram.com/boreh.company?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" },
+    { name: "TikTok", url: "#" }, // Link será adicionado quando disponível
   ];
 
   return (
@@ -64,7 +64,12 @@ const Footer = () => {
                 </a>
               </li>
               <li>
-                <a href="#contato" className="font-body text-background/70 hover:text-background transition-colors duration-300">
+                <a 
+                  href="https://www.instagram.com/boreh.company?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" 
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-body text-background/70 hover:text-background transition-colors duration-300"
+                >
                   Contato
                 </a>
               </li>
@@ -87,6 +92,17 @@ const Footer = () => {
                 <li key={link.name}>
                   <a
                     href={link.url}
+                    target={link.url !== "#" ? "_blank" : undefined}
+                    rel={link.url !== "#" ? "noopener noreferrer" : undefined}
+                    onClick={(e) => {
+                      if (link.name === "TikTok") {
+                        e.preventDefault();
+                        toast("Em breve", {
+                          duration: 2000,
+                          position: "top-center",
+                        });
+                      }
+                    }}
                     className="font-display text-lg text-background/70 hover:text-background transition-colors duration-300 inline-flex items-center gap-2 group"
                   >
                     <span className="w-0 h-px bg-background group-hover:w-6 transition-all duration-300" />
