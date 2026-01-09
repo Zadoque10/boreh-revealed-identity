@@ -3,23 +3,76 @@ import { useInView } from "framer-motion";
 import { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { 
+  applyPhoneMask, 
+  isValidBrazilianPhone, 
+  normalizePhone,
+  formatPhone 
+} from "@/lib/phoneUtils";
+import { submitToGoogleSheets } from "@/lib/googleSheets";
 
 const NewsletterSection = () => {
-  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [phoneError, setPhoneError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const sectionRef = useRef(null);
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // URL do Google Apps Script Web App (será configurada via variável de ambiente)
+  const GOOGLE_SCRIPT_URL = import.meta.env.VITE_GOOGLE_SCRIPT_URL || "";
+
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    const masked = applyPhoneMask(value);
+    setPhone(masked);
+    setPhoneError("");
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (email) {
+    
+    // Valida telefone
+    if (!phone) {
+      setPhoneError("Por favor, informe seu número de celular");
+      return;
+    }
+
+    if (!isValidBrazilianPhone(phone)) {
+      setPhoneError("Por favor, informe um número de celular válido");
+      return;
+    }
+
+    setIsSubmitting(true);
+    setPhoneError("");
+
+    try {
+      // Normaliza o telefone para formato padrão
+      const normalizedPhone = normalizePhone(phone);
+      
+      // Se tiver URL do Google Script configurada, envia para Google Sheets
+      if (GOOGLE_SCRIPT_URL) {
+        const result = await submitToGoogleSheets(normalizedPhone, GOOGLE_SCRIPT_URL);
+        
+        if (!result.success) {
+          throw new Error(result.message || "Erro ao enviar dados");
+        }
+      }
+
+      // Sucesso
       setIsSubmitted(true);
-      setEmail("");
+      setPhone("");
+    } catch (error) {
+      console.error("Erro ao processar inscrição:", error);
+      setPhoneError("Erro ao processar. Tente novamente.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   return (
     <section 
+      id="waitlist-form"
       ref={sectionRef}
       className="py-24 md:py-40 bg-card grain relative overflow-hidden"
     >
@@ -87,29 +140,48 @@ const NewsletterSection = () => {
             transition={{ delay: 0.5 }}
           >
             A próxima fase começa em breve. Entre na lista e seja notificado 
-            antes de todos sobre o lançamento oficial.
+            antes de todos sobre o lançamento oficial via WhatsApp.
           </motion.p>
 
           {/* Form */}
           {!isSubmitted ? (
             <motion.form
               onSubmit={handleSubmit}
-              className="flex flex-col sm:flex-row gap-4 max-w-lg mx-auto"
+              className="flex flex-col gap-4 max-w-lg mx-auto"
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: 0.6 }}
             >
-              <Input
-                type="email"
-                placeholder="Seu melhor email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                className="flex-1"
-              />
-              <Button variant="hero" size="lg" type="submit">
-                Entrar na Lista
-              </Button>
+              <div className="flex flex-col sm:flex-row gap-4">
+                <div className="flex-1">
+                  <Input
+                    type="tel"
+                    placeholder="(11) 99999-9999"
+                    value={phone}
+                    onChange={handlePhoneChange}
+                    maxLength={15}
+                    required
+                    className={phoneError ? "border-red-500 focus-visible:border-red-500" : ""}
+                    disabled={isSubmitting}
+                  />
+                  {phoneError && (
+                    <p className="text-sm text-red-500 mt-2 text-left">
+                      {phoneError}
+                    </p>
+                  )}
+                </div>
+                <Button 
+                  variant="hero" 
+                  size="lg" 
+                  type="submit"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? "Enviando..." : "Entrar na Lista"}
+                </Button>
+              </div>
+              <p className="text-xs text-muted-foreground text-center">
+                Ao entrar na lista, você concorda em receber mensagens via WhatsApp sobre o lançamento.
+              </p>
             </motion.form>
           ) : (
             <motion.div
@@ -122,7 +194,7 @@ const NewsletterSection = () => {
                 Você está na lista!
               </p>
               <p className="font-body text-muted-foreground mt-2 italic">
-                Em breve você receberá novidades exclusivas.
+                Em breve você receberá novidades exclusivas via WhatsApp.
               </p>
             </motion.div>
           )}
@@ -136,7 +208,7 @@ const NewsletterSection = () => {
           >
             <span className="flex items-center gap-2">
               <span className="w-1.5 h-1.5 bg-accent rounded-full" />
-              Sem spam, apenas propósito
+              Notificações via WhatsApp
             </span>
             <span className="flex items-center gap-2">
               <span className="w-1.5 h-1.5 bg-gold rounded-full" />

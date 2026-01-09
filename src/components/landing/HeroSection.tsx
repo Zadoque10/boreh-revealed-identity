@@ -3,6 +3,26 @@ import { Button } from "@/components/ui/button";
 import heroBg from "@/assets/hero-bg.jpg";
 
 const HeroSection = () => {
+  const scrollToWaitlist = () => {
+    const waitlistSection = document.getElementById("waitlist-form");
+    if (waitlistSection) {
+      waitlistSection.scrollIntoView({ 
+        behavior: "smooth",
+        block: "start"
+      });
+    }
+  };
+
+  const scrollToManifesto = () => {
+    const manifestoSection = document.getElementById("manifesto-section");
+    if (manifestoSection) {
+      manifestoSection.scrollIntoView({ 
+        behavior: "smooth",
+        block: "start"
+      });
+    }
+  };
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden grain">
       {/* Background Image */}
@@ -83,10 +103,10 @@ const HeroSection = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.9 }}
         >
-          <Button variant="hero" size="xl">
+          <Button variant="hero" size="xl" onClick={scrollToWaitlist}>
             Entrar na Lista
           </Button>
-          <Button variant="hero-outline" size="xl">
+          <Button variant="hero-outline" size="xl" onClick={scrollToManifesto}>
             Conheça o Propósito
           </Button>
         </motion.div>

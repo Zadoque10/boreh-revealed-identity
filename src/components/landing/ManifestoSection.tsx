@@ -58,7 +58,7 @@ const ManifestoSection = () => {
   const titleInView = useInView(titleRef, { once: true, margin: "-100px" });
 
   return (
-    <section className="py-24 md:py-40 bg-background grain relative overflow-hidden">
+    <section id="manifesto-section" className="py-24 md:py-40 bg-background grain relative overflow-hidden">
       {/* Decorative Elements */}
       <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-border to-transparent" />
       <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-border to-transparent" />
