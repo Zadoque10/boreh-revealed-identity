@@ -143,7 +143,6 @@ export const CloudflareTurnstile = forwardRef<CloudflareTurnstileRef, Cloudflare
       widgetIdRef.current = widgetId;
     } catch (error) {
       // Ignora erros de renderização múltipla
-      console.warn("Turnstile render error:", error);
     }
 
     return () => {
