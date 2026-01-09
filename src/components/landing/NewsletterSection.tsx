@@ -10,23 +10,42 @@ import {
   formatPhone 
 } from "@/lib/phoneUtils";
 import { submitToGoogleSheets } from "@/lib/googleSheets";
+import { CloudflareTurnstile, CloudflareTurnstileRef } from "@/components/CloudflareTurnstile";
 
 const NewsletterSection = () => {
   const [phone, setPhone] = useState("");
   const [phoneError, setPhoneError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const [turnstileError, setTurnstileError] = useState(false);
+  const turnstileRef = useRef<CloudflareTurnstileRef>(null);
   const sectionRef = useRef(null);
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
 
   // URL do Google Apps Script Web App (será configurada via variável de ambiente)
   const GOOGLE_SCRIPT_URL = import.meta.env.VITE_GOOGLE_SCRIPT_URL || "";
+  const TURNSTILE_SITE_KEY = import.meta.env.VITE_TURNSTILE_SITE_KEY || "";
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     const masked = applyPhoneMask(value);
     setPhone(masked);
     setPhoneError("");
+  };
+
+  const handleTurnstileVerify = (token: string) => {
+    setTurnstileToken(token);
+    setTurnstileError(false);
+  };
+
+  const handleTurnstileError = () => {
+    setTurnstileToken(null);
+    setTurnstileError(true);
+  };
+
+  const handleTurnstileExpire = () => {
+    setTurnstileToken(null);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -43,6 +62,12 @@ const NewsletterSection = () => {
       return;
     }
 
+    // Valida Turnstile se estiver configurado
+    if (TURNSTILE_SITE_KEY && !turnstileToken) {
+      setPhoneError("Por favor, complete a verificação de segurança");
+      return;
+    }
+
     setIsSubmitting(true);
     setPhoneError("");
 
@@ -52,25 +77,22 @@ const NewsletterSection = () => {
       
       // Se tiver URL do Google Script configurada, envia para Google Sheets
       if (GOOGLE_SCRIPT_URL) {
-        console.log("Enviando para Google Sheets...", { url: GOOGLE_SCRIPT_URL, phone: normalizedPhone });
         const result = await submitToGoogleSheets(normalizedPhone, GOOGLE_SCRIPT_URL);
         
         if (!result.success) {
           throw new Error(result.message || "Erro ao enviar dados");
         }
-        console.log("Dados enviados com sucesso!");
-      } else {
-        console.warn("VITE_GOOGLE_SCRIPT_URL não configurada. Dados não serão salvos.");
-        // Mesmo sem URL configurada, mostra sucesso para o usuário
-        // (útil para testes locais sem configurar o Google Sheets)
       }
 
       // Sucesso
       setIsSubmitted(true);
       setPhone("");
+      setTurnstileToken(null);
     } catch (error) {
-      console.error("Erro ao processar inscrição:", error);
       setPhoneError("Erro ao processar. Tente novamente.");
+      // Reseta o Turnstile em caso de erro
+      turnstileRef.current?.reset();
+      setTurnstileToken(null);
     } finally {
       setIsSubmitting(false);
     }
@@ -180,11 +202,30 @@ const NewsletterSection = () => {
                   variant="hero" 
                   size="lg" 
                   type="submit"
-                  disabled={isSubmitting}
+                  disabled={isSubmitting || (TURNSTILE_SITE_KEY && !turnstileToken)}
                 >
                   {isSubmitting ? "Enviando..." : "Entrar na Lista"}
                 </Button>
               </div>
+              
+              {/* Cloudflare Turnstile */}
+              {TURNSTILE_SITE_KEY && (
+                <CloudflareTurnstile
+                  ref={turnstileRef}
+                  onVerify={handleTurnstileVerify}
+                  onError={handleTurnstileError}
+                  onExpire={handleTurnstileExpire}
+                  theme="auto"
+                  size="normal"
+                />
+              )}
+              
+              {turnstileError && (
+                <p className="text-sm text-red-500 text-center">
+                  Erro na verificação. Tente novamente.
+                </p>
+              )}
+              
               <p className="text-xs text-muted-foreground text-center">
                 Ao entrar na lista, você concorda em receber mensagens via WhatsApp sobre o lançamento.
               </p>

@@ -21,7 +21,6 @@ export const submitToGoogleSheets = async (
 ): Promise<{ success: boolean; message?: string }> => {
   try {
     if (!webAppUrl) {
-      console.error("URL do Google Script não fornecida");
       return {
         success: false,
         message: "URL do Google Script não configurada",
@@ -34,9 +33,7 @@ export const submitToGoogleSheets = async (
       source: window.location.href,
     };
 
-    console.log("Enviando dados:", { entry, webAppUrl });
-
-    const response = await fetch(webAppUrl, {
+    await fetch(webAppUrl, {
       method: "POST",
       mode: "no-cors", // Apps Script Web App não retorna CORS headers por padrão
       headers: {
@@ -47,10 +44,8 @@ export const submitToGoogleSheets = async (
 
     // Com no-cors, não podemos verificar o status da resposta
     // Mas se não houver erro, assumimos sucesso
-    console.log("Resposta recebida (no-cors mode)");
     return { success: true };
   } catch (error) {
-    console.error("Erro ao enviar para Google Sheets:", error);
     return {
       success: false,
       message: error instanceof Error ? error.message : "Erro desconhecido",

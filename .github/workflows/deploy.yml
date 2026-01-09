@@ -29,6 +29,8 @@ jobs:
           VITE_BASE_PATH: "/"
           # Google Sheets integration - configure this secret in GitHub repository settings
           VITE_GOOGLE_SCRIPT_URL: ${{ secrets.VITE_GOOGLE_SCRIPT_URL }}
+          # Cloudflare Turnstile - configure this secret in GitHub repository settings
+          VITE_TURNSTILE_SITE_KEY: ${{ secrets.VITE_TURNSTILE_SITE_KEY }}
       - uses: actions/upload-pages-artifact@v3
         with:
           path: ./dist
