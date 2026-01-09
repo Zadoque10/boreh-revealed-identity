@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
-import { useRef, useState } from "react";
+import { useRef, useState, useCallback, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { 
@@ -44,7 +44,58 @@ const NewsletterSection = () => {
     setPhoneError("");
   };
 
-  const handleTurnstileVerify = (token: string) => {
+  const executeSubmitRef = useRef<() => Promise<void>>();
+  
+  const executeSubmit = async () => {
+    setIsSubmitting(true);
+    setIsVerifying(false);
+    setPhoneError("");
+    setNameError("");
+
+    try {
+      // Normaliza o telefone para formato padrão
+      const normalizedPhone = normalizePhone(phone);
+      
+      // Log para debug
+      console.log("📋 Dados antes de enviar:", {
+        name: name,
+        nameTrimmed: name.trim(),
+        phone: phone,
+        normalizedPhone: normalizedPhone,
+      });
+      
+      // Se tiver URL do Google Script configurada, envia para Google Sheets
+      if (GOOGLE_SCRIPT_URL) {
+        const result = await submitToGoogleSheets(name.trim(), normalizedPhone, GOOGLE_SCRIPT_URL);
+        
+        if (!result.success) {
+          throw new Error(result.message || "Erro ao enviar dados");
+        }
+      }
+
+      // Sucesso
+      setIsSubmitted(true);
+      setName("");
+      setPhone("");
+      setTurnstileToken(null);
+      pendingSubmitRef.current = false;
+    } catch (error) {
+      setPhoneError("Erro ao processar. Tente novamente.");
+      // Reseta o Turnstile em caso de erro
+      turnstileRef.current?.reset();
+      setTurnstileToken(null);
+      pendingSubmitRef.current = false;
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  // Atualiza a ref quando executeSubmit muda
+  useEffect(() => {
+    executeSubmitRef.current = executeSubmit;
+  }, [name, phone, GOOGLE_SCRIPT_URL]);
+
+  const handleTurnstileVerify = useCallback((token: string) => {
     setTurnstileToken(token);
     setTurnstileError(false);
     setIsVerifying(false);
@@ -52,21 +103,30 @@ const NewsletterSection = () => {
     // Se havia um submit pendente, executa agora
     if (pendingSubmitRef.current) {
       pendingSubmitRef.current = false;
-      // Executa o submit após um pequeno delay para garantir que o estado foi atualizado
+      // Executa o submit após um pequeno delay
       setTimeout(() => {
-        executeSubmit();
+        executeSubmitRef.current?.();
       }, 100);
     }
-  };
+  }, []);
 
-  const handleTurnstileError = () => {
+  const handleTurnstileError = useCallback(() => {
     setTurnstileToken(null);
     setTurnstileError(true);
-  };
+  }, []);
 
-  const handleTurnstileExpire = () => {
+  const handleTurnstileExpire = useCallback(() => {
     setTurnstileToken(null);
-  };
+  }, []);
+
+  const handleTurnstileError = useCallback(() => {
+    setTurnstileToken(null);
+    setTurnstileError(true);
+  }, []);
+
+  const handleTurnstileExpire = useCallback(() => {
+    setTurnstileToken(null);
+  }, []);
 
   const executeSubmit = async () => {
     setIsSubmitting(true);
