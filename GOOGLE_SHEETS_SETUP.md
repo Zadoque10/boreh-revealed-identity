@@ -22,6 +22,7 @@ Este guia explica como configurar o Google Sheets e Apps Script para receber os 
 ```javascript
 /**
  * Função que recebe dados do formulário e adiciona na planilha
+ * IMPORTANTE: Esta versão inclui validação e melhor tratamento de erros
  */
 function doPost(e) {
   try {
@@ -37,6 +38,17 @@ function doPost(e) {
     const timestamp = data.timestamp || new Date().toISOString();
     const source = data.source || '';
     
+    // Validação básica
+    if (!name || !phone) {
+      console.error('Validação falhou:', { name, phone });
+      return ContentService
+        .createTextOutput(JSON.stringify({ 
+          success: false, 
+          error: 'Nome e telefone são obrigatórios' 
+        }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+    
     // Adiciona uma nova linha na planilha
     sheet.appendRow([
       name,
@@ -45,14 +57,20 @@ function doPost(e) {
       source
     ]);
     
-    // Retorna sucesso (mesmo com no-cors, é bom ter)
+    // Log para debug (pode ser visto em Execuções)
+    console.log('Dados salvos com sucesso:', { name, phone, timestamp, source });
+    
+    // Retorna sucesso
     return ContentService
-      .createTextOutput(JSON.stringify({ success: true }))
+      .createTextOutput(JSON.stringify({ 
+        success: true, 
+        message: 'Dados salvos com sucesso' 
+      }))
       .setMimeType(ContentService.MimeType.JSON);
       
   } catch (error) {
     // Em caso de erro, loga e retorna erro
-    console.error('Erro:', error);
+    console.error('Erro ao processar:', error);
     return ContentService
       .createTextOutput(JSON.stringify({ 
         success: false, 
@@ -185,9 +203,13 @@ Os dados serão salvos automaticamente na planilha. Você pode:
 - Reimplante o Web App se necessário
 
 ### Dados não aparecem na planilha
-- Verifique os logs no Apps Script (Execuções)
-- Teste a função `testDoPost` no editor
-- Verifique se a URL do Web App está correta no `.env`
+- **Verifique os logs no Apps Script**: Vá em Apps Script → Execuções para ver se há erros
+- **Teste a função `testDoPost` no editor**: Execute a função de teste para verificar se o código está funcionando
+- **Verifique se a URL do Web App está correta**: A URL deve terminar com `/exec` e ser a URL do Web App, não do editor
+- **Verifique as permissões**: O Web App deve estar configurado como "Qualquer pessoa" pode acessar
+- **Reimplante o Web App**: Se fez alterações no código, precisa reimplantar o Web App
+- **Verifique o console do navegador**: Abra F12 → Console e veja se há erros ao enviar o formulário
+- **Verifique se a planilha está correta**: Certifique-se de que está usando a planilha correta e que tem permissões de escrita
 
 ### Erro CORS
 - O código já usa `mode: "no-cors"`, então não deve ter problemas

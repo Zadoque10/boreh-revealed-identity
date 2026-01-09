@@ -75,19 +75,51 @@ Isso significa que a variável de ambiente não está disponível. Verifique:
 - Se fez um novo build após adicionar o secret
 - Se o nome do secret está correto: `VITE_GOOGLE_SCRIPT_URL`
 
-### Dados não aparecem no Google Sheets
+### Dados não aparecem no Google Sheets (PROBLEMA COMUM)
 
-1. **Verifique se a URL está correta:**
-   - A URL deve terminar com `/exec`
-   - Deve ser a URL do Web App, não do editor do Apps Script
+Este é um problema comum que acontece porque o código anterior usava `no-cors`, que não permite verificar se a requisição foi bem-sucedida.
 
-2. **Verifique os logs do Apps Script:**
-   - Google Apps Script → Execuções
-   - Veja se há erros nas execuções
+**Solução implementada:**
+- O código agora tenta primeiro com CORS para verificar a resposta
+- Se CORS falhar, usa `no-cors` como fallback
+- Logs detalhados no console do navegador para debug
 
-3. **Verifique as permissões do Web App:**
-   - Deve estar configurado como "Qualquer pessoa"
-   - Reimplante se necessário
+**Como debugar:**
+
+1. **Abra o Console do navegador (F12 → Console)**
+   - Faça uma inscrição no formulário
+   - Procure por logs que começam com:
+     - `📤 Enviando dados para Google Sheets`
+     - `✅ Dados enviados com sucesso` (se funcionou)
+     - `❌ Erro...` (se falhou)
+
+2. **Verifique se a URL está configurada:**
+   - No console, digite: `console.log(import.meta.env.VITE_GOOGLE_SCRIPT_URL)`
+   - Deve mostrar a URL do Google Script (não `undefined`)
+
+3. **Verifique os logs do Apps Script:**
+   - Acesse: [Google Apps Script](https://script.google.com)
+   - Abra seu projeto
+   - Vá em **Execuções** (menu lateral esquerdo)
+   - Veja se há execuções recentes e se há erros
+
+4. **Verifique as permissões do Web App:**
+   - No Apps Script, vá em **Implantar** → **Gerenciar implantações**
+   - Clique nos três pontos da implantação → **Editar**
+   - Verifique se "Quem tem acesso" está como **"Qualquer pessoa"**
+   - Se não estiver, altere e **reimplante**
+
+5. **Teste a URL diretamente:**
+   - Abra uma nova aba no navegador
+   - Cole a URL do Web App (deve terminar com `/exec`)
+   - Se aparecer "Script function not found", o Web App não está configurado corretamente
+   - Se aparecer uma página em branco ou JSON, está funcionando
+
+6. **Reimplante o Web App se necessário:**
+   - Se fez alterações no código do Apps Script, precisa reimplantar
+   - Apps Script → **Implantar** → **Gerenciar implantações**
+   - Clique nos três pontos → **Editar** → **Nova versão** → **Implantar**
+   - **IMPORTANTE**: Após reimplantar, a URL pode mudar! Verifique e atualize o secret no GitHub se necessário
 
 ## 📝 Notas Importantes
 
