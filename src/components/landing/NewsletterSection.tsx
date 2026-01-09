@@ -52,11 +52,17 @@ const NewsletterSection = () => {
       
       // Se tiver URL do Google Script configurada, envia para Google Sheets
       if (GOOGLE_SCRIPT_URL) {
+        console.log("Enviando para Google Sheets...", { url: GOOGLE_SCRIPT_URL, phone: normalizedPhone });
         const result = await submitToGoogleSheets(normalizedPhone, GOOGLE_SCRIPT_URL);
         
         if (!result.success) {
           throw new Error(result.message || "Erro ao enviar dados");
         }
+        console.log("Dados enviados com sucesso!");
+      } else {
+        console.warn("VITE_GOOGLE_SCRIPT_URL não configurada. Dados não serão salvos.");
+        // Mesmo sem URL configurada, mostra sucesso para o usuário
+        // (útil para testes locais sem configurar o Google Sheets)
       }
 
       // Sucesso

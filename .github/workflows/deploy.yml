@@ -27,6 +27,8 @@ jobs:
         env:
           # Use "/" for custom domain, or "/boreh-revealed-identity/" for GitHub Pages subdirectory
           VITE_BASE_PATH: "/"
+          # Google Sheets integration - configure this secret in GitHub repository settings
+          VITE_GOOGLE_SCRIPT_URL: ${{ secrets.VITE_GOOGLE_SCRIPT_URL }}
       - uses: actions/upload-pages-artifact@v3
         with:
           path: ./dist
