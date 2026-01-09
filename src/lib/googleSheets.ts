@@ -3,6 +3,7 @@
  */
 
 export interface WaitlistEntry {
+  name: string;
   phone: string;
   timestamp: string;
   source?: string;
@@ -11,11 +12,13 @@ export interface WaitlistEntry {
 /**
  * Envia dados para Google Sheets através do Web App do Apps Script
  * 
+ * @param name - Nome do usuário
  * @param phone - Número de telefone formatado
  * @param webAppUrl - URL do Web App do Google Apps Script
  * @returns Promise com resultado do envio
  */
 export const submitToGoogleSheets = async (
+  name: string,
   phone: string,
   webAppUrl: string
 ): Promise<{ success: boolean; message?: string }> => {
@@ -28,6 +31,7 @@ export const submitToGoogleSheets = async (
     }
 
     const entry: WaitlistEntry = {
+      name,
       phone,
       timestamp: new Date().toISOString(),
       source: window.location.href,

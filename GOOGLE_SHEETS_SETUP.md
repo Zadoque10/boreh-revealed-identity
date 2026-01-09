@@ -9,9 +9,10 @@ Este guia explica como configurar o Google Sheets e Apps Script para receber os 
 1. Acesse [Google Sheets](https://sheets.google.com)
 2. Crie uma nova planilha
 3. Na primeira linha, adicione os cabeçalhos:
-   - **Coluna A**: `Telefone`
-   - **Coluna B**: `Data/Hora`
-   - **Coluna C**: `Origem` (opcional - URL de onde veio a inscrição)
+   - **Coluna A**: `Nome`
+   - **Coluna B**: `Telefone`
+   - **Coluna C**: `Data/Hora`
+   - **Coluna D**: `Origem` (opcional - URL de onde veio a inscrição)
 
 ### 2. Configurar o Google Apps Script
 
@@ -31,12 +32,14 @@ function doPost(e) {
     const data = JSON.parse(e.postData.contents);
     
     // Extrai os dados
+    const name = data.name || '';
     const phone = data.phone || '';
     const timestamp = data.timestamp || new Date().toISOString();
     const source = data.source || '';
     
     // Adiciona uma nova linha na planilha
     sheet.appendRow([
+      name,
       phone,
       new Date(timestamp),
       source

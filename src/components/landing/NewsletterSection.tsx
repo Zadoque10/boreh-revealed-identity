@@ -13,19 +13,29 @@ import { submitToGoogleSheets } from "@/lib/googleSheets";
 import { CloudflareTurnstile, CloudflareTurnstileRef } from "@/components/CloudflareTurnstile";
 
 const NewsletterSection = () => {
+  const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [phoneError, setPhoneError] = useState("");
+  const [nameError, setNameError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isVerifying, setIsVerifying] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const [turnstileError, setTurnstileError] = useState(false);
   const turnstileRef = useRef<CloudflareTurnstileRef>(null);
+  const pendingSubmitRef = useRef(false);
   const sectionRef = useRef(null);
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
 
   // URL do Google Apps Script Web App (será configurada via variável de ambiente)
   const GOOGLE_SCRIPT_URL = import.meta.env.VITE_GOOGLE_SCRIPT_URL || "";
   const TURNSTILE_SITE_KEY = import.meta.env.VITE_TURNSTILE_SITE_KEY || "";
+
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setName(value);
+    setNameError("");
+  };
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -37,6 +47,16 @@ const NewsletterSection = () => {
   const handleTurnstileVerify = (token: string) => {
     setTurnstileToken(token);
     setTurnstileError(false);
+    setIsVerifying(false);
+    
+    // Se havia um submit pendente, executa agora
+    if (pendingSubmitRef.current) {
+      pendingSubmitRef.current = false;
+      // Executa o submit após um pequeno delay para garantir que o estado foi atualizado
+      setTimeout(() => {
+        executeSubmit();
+      }, 100);
+    }
   };
 
   const handleTurnstileError = () => {
@@ -48,8 +68,55 @@ const NewsletterSection = () => {
     setTurnstileToken(null);
   };
 
+  const executeSubmit = async () => {
+    setIsSubmitting(true);
+    setIsVerifying(false);
+    setPhoneError("");
+    setNameError("");
+
+    try {
+      // Normaliza o telefone para formato padrão
+      const normalizedPhone = normalizePhone(phone);
+      
+      // Se tiver URL do Google Script configurada, envia para Google Sheets
+      if (GOOGLE_SCRIPT_URL) {
+        const result = await submitToGoogleSheets(name.trim(), normalizedPhone, GOOGLE_SCRIPT_URL);
+        
+        if (!result.success) {
+          throw new Error(result.message || "Erro ao enviar dados");
+        }
+      }
+
+      // Sucesso
+      setIsSubmitted(true);
+      setName("");
+      setPhone("");
+      setTurnstileToken(null);
+      pendingSubmitRef.current = false;
+    } catch (error) {
+      setPhoneError("Erro ao processar. Tente novamente.");
+      // Reseta o Turnstile em caso de erro
+      turnstileRef.current?.reset();
+      setTurnstileToken(null);
+      pendingSubmitRef.current = false;
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Valida nome
+    if (!name.trim()) {
+      setNameError("Por favor, informe seu nome");
+      return;
+    }
+
+    if (name.trim().length < 2) {
+      setNameError("O nome deve ter pelo menos 2 caracteres");
+      return;
+    }
     
     // Valida telefone
     if (!phone) {
@@ -62,40 +129,21 @@ const NewsletterSection = () => {
       return;
     }
 
-    // Valida Turnstile se estiver configurado
+    // Se tiver Turnstile configurado e ainda não tiver token, inicia verificação
     if (TURNSTILE_SITE_KEY && !turnstileToken) {
-      setPhoneError("Por favor, complete a verificação de segurança");
+      setIsVerifying(true);
+      setPhoneError("");
+      setNameError("");
+      pendingSubmitRef.current = true;
+      // Força o Turnstile a executar a verificação novamente
+      turnstileRef.current?.reset();
+      // O Turnstile vai chamar handleTurnstileVerify quando estiver pronto
+      // E então executeSubmit será chamado automaticamente
       return;
     }
 
-    setIsSubmitting(true);
-    setPhoneError("");
-
-    try {
-      // Normaliza o telefone para formato padrão
-      const normalizedPhone = normalizePhone(phone);
-      
-      // Se tiver URL do Google Script configurada, envia para Google Sheets
-      if (GOOGLE_SCRIPT_URL) {
-        const result = await submitToGoogleSheets(normalizedPhone, GOOGLE_SCRIPT_URL);
-        
-        if (!result.success) {
-          throw new Error(result.message || "Erro ao enviar dados");
-        }
-      }
-
-      // Sucesso
-      setIsSubmitted(true);
-      setPhone("");
-      setTurnstileToken(null);
-    } catch (error) {
-      setPhoneError("Erro ao processar. Tente novamente.");
-      // Reseta o Turnstile em caso de erro
-      turnstileRef.current?.reset();
-      setTurnstileToken(null);
-    } finally {
-      setIsSubmitting(false);
-    }
+    // Se já tem token ou não precisa de Turnstile, executa direto
+    executeSubmit();
   };
 
   return (
@@ -180,6 +228,26 @@ const NewsletterSection = () => {
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: 0.6 }}
             >
+              {/* Campo Nome */}
+              <div>
+                <Input
+                  type="text"
+                  placeholder="Seu nome completo"
+                  value={name}
+                  onChange={handleNameChange}
+                  maxLength={100}
+                  required
+                  className={nameError ? "border-red-500 focus-visible:border-red-500" : ""}
+                  disabled={isSubmitting || isVerifying}
+                />
+                {nameError && (
+                  <p className="text-sm text-red-500 mt-2 text-left">
+                    {nameError}
+                  </p>
+                )}
+              </div>
+
+              {/* Campo Telefone e Botão */}
               <div className="flex flex-col sm:flex-row gap-4">
                 <div className="flex-1">
                   <Input
@@ -190,7 +258,7 @@ const NewsletterSection = () => {
                     maxLength={15}
                     required
                     className={phoneError ? "border-red-500 focus-visible:border-red-500" : ""}
-                    disabled={isSubmitting}
+                    disabled={isSubmitting || isVerifying}
                   />
                   {phoneError && (
                     <p className="text-sm text-red-500 mt-2 text-left">
@@ -202,9 +270,28 @@ const NewsletterSection = () => {
                   variant="hero" 
                   size="lg" 
                   type="submit"
-                  disabled={isSubmitting || (TURNSTILE_SITE_KEY && !turnstileToken)}
+                  disabled={isSubmitting || isVerifying}
+                  className="min-w-[200px]"
                 >
-                  {isSubmitting ? "Enviando..." : "Entrar na Lista"}
+                  {isVerifying ? (
+                    <span className="flex items-center gap-2">
+                      <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                      Verificando...
+                    </span>
+                  ) : isSubmitting ? (
+                    <span className="flex items-center gap-2">
+                      <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                      Enviando...
+                    </span>
+                  ) : (
+                    "Entrar na Lista"
+                  )}
                 </Button>
               </div>
               
