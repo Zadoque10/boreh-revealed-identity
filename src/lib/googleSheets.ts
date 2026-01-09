@@ -37,6 +37,11 @@ export const submitToGoogleSheets = async (
       source: window.location.href,
     };
 
+    console.log("📤 Enviando dados para Google Sheets:", entry);
+    console.log("📝 Nome sendo enviado:", name);
+    console.log("📝 Nome está vazio?", !name || name.length === 0);
+    console.log("📦 JSON stringificado:", JSON.stringify(entry));
+
     await fetch(webAppUrl, {
       method: "POST",
       mode: "no-cors", // Apps Script Web App não retorna CORS headers por padrão

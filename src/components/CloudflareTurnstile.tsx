@@ -44,8 +44,25 @@ export const CloudflareTurnstile = forwardRef<CloudflareTurnstileRef, Cloudflare
 
   const reset = () => {
     if (widgetIdRef.current && window.turnstile) {
-      window.turnstile.reset(widgetIdRef.current);
+      try {
+        window.turnstile.reset(widgetIdRef.current);
+      } catch (error) {
+        // Se reset falhar, remove e renderiza novamente
+        try {
+          window.turnstile.remove(widgetIdRef.current);
+        } catch (removeError) {
+          // Ignora erro de remoção
+        }
+        widgetIdRef.current = null;
+        // Força re-renderização
+        setIsLoaded(false);
+        setTimeout(() => setIsLoaded(true), 100);
+      }
+    } else {
+      // Se não há widget, força re-renderização
       widgetIdRef.current = null;
+      setIsLoaded(false);
+      setTimeout(() => setIsLoaded(true), 100);
     }
   };
 
@@ -84,27 +101,47 @@ export const CloudflareTurnstile = forwardRef<CloudflareTurnstileRef, Cloudflare
       return;
     }
 
-    // Renderiza o widget do Turnstile
-    const widgetId = window.turnstile.render(containerRef.current, {
-      sitekey: siteKey,
-      callback: (token: string) => {
-        onVerify(token);
-      },
-      "error-callback": () => {
-        onError?.();
-      },
-      "expired-callback": () => {
-        onExpire?.();
-      },
-      theme,
-      size,
-    });
+    // Evita renderizar múltiplas vezes
+    if (widgetIdRef.current) {
+      return;
+    }
 
-    widgetIdRef.current = widgetId;
+    // Verifica se já existe um widget renderizado neste container
+    if (containerRef.current.querySelector('.cf-turnstile')) {
+      return;
+    }
+
+    // Renderiza o widget do Turnstile
+    try {
+      const widgetId = window.turnstile.render(containerRef.current, {
+        sitekey: siteKey,
+        callback: (token: string) => {
+          onVerify(token);
+        },
+        "error-callback": () => {
+          onError?.();
+        },
+        "expired-callback": () => {
+          onExpire?.();
+        },
+        theme,
+        size,
+      });
+
+      widgetIdRef.current = widgetId;
+    } catch (error) {
+      // Ignora erros de renderização múltipla
+      console.warn("Turnstile render error:", error);
+    }
 
     return () => {
       if (widgetIdRef.current && window.turnstile) {
-        window.turnstile.remove(widgetIdRef.current);
+        try {
+          window.turnstile.remove(widgetIdRef.current);
+        } catch (error) {
+          // Ignora erros ao remover
+        }
+        widgetIdRef.current = null;
       }
     };
   }, [isLoaded, siteKey, onVerify, onError, onExpire, theme, size]);

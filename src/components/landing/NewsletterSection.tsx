@@ -78,6 +78,14 @@ const NewsletterSection = () => {
       // Normaliza o telefone para formato padrão
       const normalizedPhone = normalizePhone(phone);
       
+      // Log para debug
+      console.log("📋 Dados antes de enviar:", {
+        name: name,
+        nameTrimmed: name.trim(),
+        phone: phone,
+        normalizedPhone: normalizedPhone,
+      });
+      
       // Se tiver URL do Google Script configurada, envia para Google Sheets
       if (GOOGLE_SCRIPT_URL) {
         const result = await submitToGoogleSheets(name.trim(), normalizedPhone, GOOGLE_SCRIPT_URL);
