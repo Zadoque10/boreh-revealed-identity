@@ -119,59 +119,6 @@ const NewsletterSection = () => {
     setTurnstileToken(null);
   }, []);
 
-  const handleTurnstileError = useCallback(() => {
-    setTurnstileToken(null);
-    setTurnstileError(true);
-  }, []);
-
-  const handleTurnstileExpire = useCallback(() => {
-    setTurnstileToken(null);
-  }, []);
-
-  const executeSubmit = async () => {
-    setIsSubmitting(true);
-    setIsVerifying(false);
-    setPhoneError("");
-    setNameError("");
-
-    try {
-      // Normaliza o telefone para formato padrão
-      const normalizedPhone = normalizePhone(phone);
-      
-      // Log para debug
-      console.log("📋 Dados antes de enviar:", {
-        name: name,
-        nameTrimmed: name.trim(),
-        phone: phone,
-        normalizedPhone: normalizedPhone,
-      });
-      
-      // Se tiver URL do Google Script configurada, envia para Google Sheets
-      if (GOOGLE_SCRIPT_URL) {
-        const result = await submitToGoogleSheets(name.trim(), normalizedPhone, GOOGLE_SCRIPT_URL);
-        
-        if (!result.success) {
-          throw new Error(result.message || "Erro ao enviar dados");
-        }
-      }
-
-      // Sucesso
-      setIsSubmitted(true);
-      setName("");
-      setPhone("");
-      setTurnstileToken(null);
-      pendingSubmitRef.current = false;
-    } catch (error) {
-      setPhoneError("Erro ao processar. Tente novamente.");
-      // Reseta o Turnstile em caso de erro
-      turnstileRef.current?.reset();
-      setTurnstileToken(null);
-      pendingSubmitRef.current = false;
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
