@@ -4,7 +4,8 @@ import path from "path";
 import { componentTagger } from "lovable-tagger";
 
 export default defineConfig(({ mode }) => ({
-  base: mode === "production" ? "/boreh-revealed-identity/" : "/",
+  // Use custom domain base path if set, otherwise use GitHub Pages subdirectory
+  base: process.env.VITE_BASE_PATH || (mode === "production" ? "/boreh-revealed-identity/" : "/"),
 
   server: {
     host: "::",
