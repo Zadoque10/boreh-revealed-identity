@@ -1,119 +1,101 @@
-import { motion } from "framer-motion";
-import { useInView } from "framer-motion";
-import { useRef } from "react";
-
-const manifestoBlocks = [
-  {
-    text: "Aquele que faz todas as coisas pela Palavra.",
-    accent: false,
-  },
-  {
-    text: "O invisível se torna inegável.",
-    accent: true,
-  },
-  {
-    text: "Somos a obra-prima do Criador.",
-    accent: false,
-  },
-  {
-    text: "Identidade. Autenticidade. Eternidade.",
-    accent: true,
-  },
-  {
-    text: "O que fazemos ecoa para sempre.",
-    accent: false,
-  },
-];
-
-const ManifestoBlock = ({ text, accent, index }: { text: string; accent: boolean; index: number }) => {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
-
-  return (
-    <motion.div
-      ref={ref}
-      className={`manifesto-block p-8 md:p-12 ${
-        index % 2 === 0 ? "ml-0 md:ml-12" : "mr-0 md:mr-12"
-      }`}
-      initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
-      animate={isInView ? { opacity: 1, x: 0 } : {}}
-      transition={{ duration: 0.8, delay: index * 0.1, ease: [0.22, 1, 0.36, 1] }}
-    >
-      <p
-        className={`font-body text-2xl md:text-4xl lg:text-5xl leading-tight ${
-          accent ? "text-primary italic" : "text-foreground"
-        }`}
-      >
-        {text}
-      </p>
-      {accent && (
-        <div className="mt-4 h-0.5 w-24 bg-gradient-to-r from-gold to-primary" />
-      )}
-    </motion.div>
-  );
-};
-
 const ManifestoSection = () => {
-  const titleRef = useRef(null);
-  const titleInView = useInView(titleRef, { once: true, margin: "-100px" });
-
   return (
-    <section id="manifesto-section" className="py-24 md:py-40 bg-background grain relative overflow-hidden">
-      {/* Decorative Elements */}
-      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-border to-transparent" />
-      <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-border to-transparent" />
+    <section id="manifesto" className="relative py-24 md:py-40 px-4 overflow-hidden">
+      {/* Background Elements */}
+      <div className="absolute inset-0 texture-grain" />
+      <div className="absolute top-0 left-0 w-full h-32 gradient-fade-t" />
+      <div className="absolute bottom-0 left-0 w-full h-32 gradient-fade-b" />
       
-      <motion.div
-        className="absolute top-20 right-10 w-40 h-40 border border-accent/10 rotate-45"
-        animate={{ rotate: [45, 50, 45] }}
-        transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-      />
+      {/* Decorative Blurs */}
+      <div className="absolute top-1/4 left-0 w-64 h-64 rounded-full bg-cream-dark/40 blur-3xl" />
+      <div className="absolute bottom-1/4 right-0 w-80 h-80 rounded-full bg-accent/30 blur-3xl" />
 
-      <div className="container mx-auto px-6">
-        {/* Section Title */}
-        <motion.div
-          ref={titleRef}
-          className="text-center mb-20"
-          initial={{ opacity: 0, y: 30 }}
-          animate={titleInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8 }}
-        >
-          <span className="font-display text-sm uppercase tracking-[0.5em] text-muted-foreground">
-            Manifesto
-          </span>
-          <h2 className="font-display text-4xl md:text-6xl font-bold text-foreground mt-4">
-            No Princípio Era a Palavra
-          </h2>
-        </motion.div>
+      <div className="relative z-10 max-w-6xl mx-auto">
+        {/* Main Container */}
+        <div className="glass-strong rounded-editorial-xl p-8 md:p-16 lg:p-24 texture-grain">
+          {/* Section Label */}
+          <div className="text-center mb-12 md:mb-20 animate-fade-up">
+            <span className="text-sm uppercase tracking-[0.3em] text-warm-gray">
+              Manifesto
+            </span>
+          </div>
 
-        {/* Manifesto Blocks */}
-        <div className="max-w-4xl mx-auto space-y-8">
-          {manifestoBlocks.map((block, index) => (
-            <ManifestoBlock
-              key={index}
-              text={block.text}
-              accent={block.accent}
-              index={index}
-            />
-          ))}
+          {/* Editorial Typography Layout */}
+          <div className="space-y-16 md:space-y-24">
+            {/* Opening Statement */}
+            <div className="text-center animate-fade-up animation-delay-100">
+              <h2 className="font-display italic text-4xl md:text-6xl lg:text-7xl text-foreground leading-tight">
+                "Magnum Opus
+                <br />
+                <span className="text-warm-gray">de Deus"</span>
+              </h2>
+            </div>
+
+            {/* Body Text - Treated Graphically */}
+            <div className="grid md:grid-cols-2 gap-12 md:gap-16 animate-fade-up animation-delay-200">
+              <div className="space-y-6">
+                <p className="text-lg md:text-xl text-foreground/80 leading-relaxed">
+                  Você foi criado com propósito, moldado com intenção, 
+                  desenhado para deixar uma marca única no mundo.
+                </p>
+                <p className="text-lg md:text-xl text-foreground/80 leading-relaxed">
+                  A BOREH existe para te lembrar disso todos os dias. Cada peça que vestimos 
+                  carrega uma mensagem. Cada tecido conta uma história.
+                </p>
+              </div>
+              <div className="space-y-6">
+                <p className="text-lg md:text-xl text-foreground/80 leading-relaxed">
+                  Não fazemos moda para seguir tendências. Criamos para quem entende que 
+                  identidade não se copia — se constrói.
+                </p>
+                <p className="text-lg md:text-xl text-foreground/80 leading-relaxed">
+                  Para quem sabe que o que fazemos hoje ecoa pela eternidade.
+                </p>
+              </div>
+            </div>
+
+            {/* Featured Quote */}
+            <div className="relative py-12 md:py-16 animate-fade-up animation-delay-300">
+              <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-transparent via-charcoal to-transparent" />
+              <blockquote className="pl-8 md:pl-12">
+                <p className="text-statement font-display italic text-foreground">
+                  O que fazemos
+                  <br />
+                  <span className="text-warm-gray">ecoa pela eternidade.</span>
+                </p>
+              </blockquote>
+            </div>
+
+            {/* Values Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 animate-fade-up animation-delay-400">
+              <div className="text-center p-6">
+                <h3 className="text-headline mb-4">Identidade</h3>
+                <p className="text-warm-gray">
+                  Você não é mais um. Você é único. Sua história merece ser contada.
+                </p>
+              </div>
+              <div className="text-center p-6">
+                <h3 className="text-headline mb-4">Propósito</h3>
+                <p className="text-warm-gray">
+                  Cada escolha é uma declaração. Cada peça, um lembrete do seu valor.
+                </p>
+              </div>
+              <div className="text-center p-6">
+                <h3 className="text-headline mb-4">Eternidade</h3>
+                <p className="text-warm-gray">
+                  O que construímos hoje permanece. Criamos legado, não tendências.
+                </p>
+              </div>
+            </div>
+
+            {/* Closing */}
+            <div className="text-center pt-8 animate-fade-up animation-delay-500">
+              <p className="font-display italic text-2xl md:text-3xl text-warm-gray">
+                BOREH — O Criador
+              </p>
+            </div>
+          </div>
         </div>
-
-        {/* Bottom Quote */}
-        <motion.div
-          className="mt-24 text-center"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1, delay: 0.5 }}
-        >
-          <div className="w-px h-20 bg-gradient-to-b from-transparent via-gold to-transparent mx-auto mb-8" />
-          <p className="font-display text-lg uppercase tracking-[0.3em] text-gold">
-            בורא
-          </p>
-          <p className="font-body text-sm text-muted-foreground mt-2 italic">
-            "Boreh" em hebraico — O que cria do nada
-          </p>
-        </motion.div>
       </div>
     </section>
   );

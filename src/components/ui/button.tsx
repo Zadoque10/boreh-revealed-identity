@@ -16,10 +16,10 @@ const buttonVariants = cva(
         ghost: "hover:bg-accent hover:text-accent-foreground rounded-md",
         link: "text-primary underline-offset-4 hover:underline",
         // BOREH Custom Variants
-        hero: "bg-foreground text-background border-2 border-foreground hover:bg-transparent hover:text-foreground transition-all duration-500 uppercase tracking-[0.2em] font-semibold rounded-none",
-        "hero-outline": "bg-transparent text-foreground border-2 border-foreground hover:bg-foreground hover:text-background transition-all duration-500 uppercase tracking-[0.2em] font-semibold rounded-none",
-        gold: "bg-gold text-gold-foreground hover:shadow-[0_0_30px_hsl(38_65%_50%/0.4)] transition-all duration-500 uppercase tracking-[0.2em] font-semibold rounded-none",
-        terracota: "bg-primary text-primary-foreground hover:shadow-[0_0_30px_hsl(15_55%_45%/0.4)] transition-all duration-500 uppercase tracking-[0.2em] font-semibold rounded-none",
+        hero: "bg-foreground text-background border-2 border-foreground hover:bg-transparent hover:text-foreground transition-all duration-500 uppercase tracking-[0.2em] font-semibold rounded-2xl",
+        "hero-outline": "bg-transparent text-foreground border-2 border-foreground hover:bg-foreground hover:text-background transition-all duration-500 uppercase tracking-[0.2em] font-semibold rounded-2xl",
+        gold: "bg-gold text-gold-foreground hover:shadow-[0_0_30px_hsl(38_65%_50%/0.4)] transition-all duration-500 uppercase tracking-[0.2em] font-semibold rounded-2xl",
+        terracota: "bg-primary text-primary-foreground hover:shadow-[0_0_30px_hsl(15_55%_45%/0.4)] transition-all duration-500 uppercase tracking-[0.2em] font-semibold rounded-2xl",
         minimal: "bg-transparent text-foreground border-b-2 border-foreground rounded-none hover:border-primary hover:text-primary transition-all duration-300 uppercase tracking-[0.15em]",
       },
       size: {
@@ -28,6 +28,8 @@ const buttonVariants = cva(
         lg: "h-12 px-8 text-base",
         xl: "h-14 px-10 text-lg",
         icon: "h-10 w-10",
+        hero: "h-14 px-10 py-4",
+        "hero-lg": "h-16 px-12 py-5",
       },
     },
     defaultVariants: {

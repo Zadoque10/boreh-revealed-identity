@@ -54,8 +54,8 @@ const Footer = () => {
                 </a>
               </li>
               <li>
-                <a href="#conceito" className="font-body text-background/70 hover:text-background transition-colors duration-300">
-                  Conceito
+                <a href="#quality" className="font-body text-background/70 hover:text-background transition-colors duration-300">
+                  Qualidade
                 </a>
               </li>
               <li>

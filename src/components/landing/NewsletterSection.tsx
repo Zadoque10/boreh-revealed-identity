@@ -1,6 +1,4 @@
-import { motion } from "framer-motion";
-import { useInView } from "framer-motion";
-import { useRef, useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { 
@@ -24,8 +22,6 @@ const NewsletterSection = () => {
   const [turnstileError, setTurnstileError] = useState(false);
   const turnstileRef = useRef<CloudflareTurnstileRef>(null);
   const pendingSubmitRef = useRef(false);
-  const sectionRef = useRef(null);
-  const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
 
   // URL do Google Apps Script Web App (será configurada via variável de ambiente)
   const GOOGLE_SCRIPT_URL = import.meta.env.VITE_GOOGLE_SCRIPT_URL || "";
@@ -155,231 +151,168 @@ const NewsletterSection = () => {
 
   return (
     <section 
-      id="waitlist-form"
-      ref={sectionRef}
-      className="py-24 md:py-40 bg-card grain relative overflow-hidden"
+      id="waitlist"
+      className="relative py-24 md:py-40 px-4 overflow-hidden"
     >
-      {/* Background Pattern */}
-      <div className="absolute inset-0">
-        <div className="absolute top-0 left-1/4 w-px h-full bg-gradient-to-b from-transparent via-border/50 to-transparent" />
-        <div className="absolute top-0 right-1/4 w-px h-full bg-gradient-to-b from-transparent via-border/50 to-transparent" />
-      </div>
+      {/* Background Elements */}
+      <div className="absolute inset-0 texture-grain" />
+      <div className="absolute top-1/3 left-1/4 w-96 h-96 rounded-full bg-cream-dark/40 blur-3xl" />
+      <div className="absolute bottom-1/4 right-1/3 w-72 h-72 rounded-full bg-accent/30 blur-3xl" />
 
-      {/* Floating Elements */}
-      <motion.div
-        className="absolute top-20 left-10 text-8xl font-display text-foreground/[0.02] select-none"
-        animate={{ y: [0, -20, 0] }}
-        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-      >
-        ב
-      </motion.div>
-      <motion.div
-        className="absolute bottom-20 right-10 text-8xl font-display text-foreground/[0.02] select-none"
-        animate={{ y: [0, 20, 0] }}
-        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-      >
-        א
-      </motion.div>
+      <div className="relative z-10 max-w-3xl mx-auto">
+        {/* Main Container */}
+        <div className="glass-strong rounded-editorial-xl p-8 md:p-16 lg:p-20 texture-grain text-center">
+          {/* Section Label */}
+          <div className="mb-8 animate-fade-up">
+            <span className="inline-block glass rounded-editorial px-6 py-3 text-xs uppercase tracking-[0.2em] text-warm-gray font-medium">
+              Acesso Exclusivo
+            </span>
+          </div>
 
-      <div className="container mx-auto px-6 relative z-10">
-        <motion.div
-          className="max-w-2xl mx-auto text-center"
-          initial={{ opacity: 0, y: 40 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-        >
-          {/* Title */}
-          <motion.span 
-            className="font-display text-sm uppercase tracking-[0.5em] text-muted-foreground block mb-4"
-            initial={{ opacity: 0 }}
-            animate={isInView ? { opacity: 1 } : {}}
-            transition={{ delay: 0.2 }}
-          >
-            Lista Exclusiva
-          </motion.span>
-          
-          <motion.h2 
-            className="font-display text-4xl md:text-6xl font-bold text-foreground mb-6"
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ delay: 0.3 }}
-          >
-            Seja o Primeiro
-          </motion.h2>
-          
-          <motion.p 
-            className="font-body text-xl md:text-2xl text-muted-foreground italic mb-4"
-            initial={{ opacity: 0 }}
-            animate={isInView ? { opacity: 1 } : {}}
-            transition={{ delay: 0.4 }}
-          >
-            "Seja o primeiro a vestir sua identidade."
-          </motion.p>
-          
-          <motion.p 
-            className="font-body text-lg text-muted-foreground mb-12"
-            initial={{ opacity: 0 }}
-            animate={isInView ? { opacity: 1 } : {}}
-            transition={{ delay: 0.5 }}
-          >
-            A próxima fase começa em breve. Entre na lista e seja notificado 
-            antes de todos sobre o lançamento oficial via WhatsApp.
-          </motion.p>
+          {/* Heading */}
+          <h2 className="text-statement mb-6 animate-fade-up animation-delay-100">
+            Lista de Espera
+            <br />
+            <span className="font-display italic text-warm-gray">Exclusiva BOREH</span>
+          </h2>
 
-          {/* Form */}
-          {!isSubmitted ? (
-            <motion.form
-              onSubmit={handleSubmit}
-              className="flex flex-col gap-4 max-w-lg mx-auto"
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: 0.6 }}
-            >
-              {/* Campo Nome */}
-              <div>
-                <Input
-                  type="text"
-                  placeholder="Seu nome completo"
-                  value={name}
-                  onChange={handleNameChange}
-                  maxLength={100}
-                  required
-                  className={nameError ? "border-red-500 focus-visible:border-red-500" : ""}
-                  disabled={isSubmitting || isVerifying}
-                />
-                {nameError && (
-                  <p className="text-sm text-red-500 mt-2 text-left">
-                    {nameError}
-                  </p>
-                )}
+          {/* Subheading */}
+          <p className="text-xl md:text-2xl text-warm-gray max-w-xl mx-auto mb-12 animate-fade-up animation-delay-200">
+            Para quem entende que<br />
+            <span className="font-medium text-foreground">identidade não se copia.</span>
+          </p>
+
+          {isSubmitted ? (
+            <div className="animate-scale-in">
+              <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-charcoal flex items-center justify-center">
+                <svg className="w-10 h-10 text-off-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
               </div>
-
-              {/* Campo Telefone e Botão */}
-              <div className="flex flex-col sm:flex-row gap-4">
-                <div className="flex-1">
+              <h3 className="text-headline mb-4">Você está na lista!</h3>
+              <p className="text-warm-gray">
+                Fique atento ao seu WhatsApp. Novidades chegando em breve.
+              </p>
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit} className="space-y-6 animate-fade-up animation-delay-300">
+              <div className="space-y-4">
+                <div>
+                  <Input
+                    type="text"
+                    placeholder="Nome completo"
+                    value={name}
+                    onChange={handleNameChange}
+                    maxLength={100}
+                    required
+                    className={`h-14 px-6 rounded-editorial-lg bg-background/50 border-border/50 text-center text-lg placeholder:text-warm-gray/60 focus:ring-2 focus:ring-charcoal ${
+                      nameError ? "border-red-500 focus-visible:border-red-500" : ""
+                    }`}
+                    disabled={isSubmitting || isVerifying}
+                  />
+                  {nameError && (
+                    <p className="text-sm text-red-500 mt-2 text-center">
+                      {nameError}
+                    </p>
+                  )}
+                </div>
+                <div>
                   <Input
                     type="tel"
-                    placeholder="(11) 99999-9999"
+                    placeholder="WhatsApp (com DDD)"
                     value={phone}
                     onChange={handlePhoneChange}
                     maxLength={15}
                     required
-                    className={phoneError ? "border-red-500 focus-visible:border-red-500" : ""}
+                    className={`h-14 px-6 rounded-editorial-lg bg-background/50 border-border/50 text-center text-lg placeholder:text-warm-gray/60 focus:ring-2 focus:ring-charcoal ${
+                      phoneError ? "border-red-500 focus-visible:border-red-500" : ""
+                    }`}
                     disabled={isSubmitting || isVerifying}
                   />
                   {phoneError && (
-                    <p className="text-sm text-red-500 mt-2 text-left">
+                    <p className="text-sm text-red-500 mt-2 text-center">
                       {phoneError}
                     </p>
                   )}
                 </div>
-                <Button 
-                  variant="hero" 
-                  size="lg" 
-                  type="submit"
-                  disabled={isSubmitting || isVerifying}
-                  className="min-w-[200px]"
-                >
-                  {isVerifying ? (
-                    <span className="flex items-center gap-2">
-                      <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                      </svg>
-                      Verificando...
-                    </span>
-                  ) : isSubmitting ? (
-                    <span className="flex items-center gap-2">
-                      <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                      </svg>
-                      Enviando...
-                    </span>
-                  ) : (
-                    "Entrar na Lista"
-                  )}
-                </Button>
               </div>
-              
+
               {/* Cloudflare Turnstile */}
               {TURNSTILE_SITE_KEY && (
                 <div className="space-y-2">
                   {isVerifying && (
-                    <motion.div
-                      initial={{ opacity: 0, y: -10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      className="flex items-center justify-center gap-2 text-sm text-muted-foreground"
-                    >
-                      <svg className="animate-spin h-4 w-4 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <div className="flex items-center justify-center gap-2 text-sm text-warm-gray">
+                      <svg className="animate-spin h-4 w-4 text-charcoal" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                       </svg>
                       <span>Verificando segurança...</span>
-                    </motion.div>
+                    </div>
                   )}
-                  <CloudflareTurnstile
-                    ref={turnstileRef}
-                    onVerify={handleTurnstileVerify}
-                    onError={handleTurnstileError}
-                    onExpire={handleTurnstileExpire}
-                    theme="auto"
-                    size="normal"
-                  />
+                  <div className="flex justify-center">
+                    <CloudflareTurnstile
+                      ref={turnstileRef}
+                      onVerify={handleTurnstileVerify}
+                      onError={handleTurnstileError}
+                      onExpire={handleTurnstileExpire}
+                      theme="auto"
+                      size="normal"
+                    />
+                  </div>
                 </div>
               )}
-              
+
               {turnstileError && (
                 <p className="text-sm text-red-500 text-center">
                   Erro na verificação. Tente novamente.
                 </p>
               )}
-              
-              <p className="text-xs text-muted-foreground text-center">
-                Ao entrar na lista, você concorda em receber mensagens via WhatsApp sobre o lançamento.
-              </p>
-            </motion.form>
-          ) : (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="p-8 border-2 border-gold/50 bg-gold/5"
-            >
-              <span className="text-4xl mb-4 block">✓</span>
-              <p className="font-display text-xl text-foreground uppercase tracking-wide">
-                Você está na lista!
-              </p>
-              <p className="font-body text-muted-foreground mt-2 italic">
-                Em breve você receberá novidades exclusivas via WhatsApp.
-              </p>
-            </motion.div>
-          )}
 
-          {/* Trust Elements */}
-          <motion.div
-            className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-6 text-sm text-muted-foreground"
-            initial={{ opacity: 0 }}
-            animate={isInView ? { opacity: 1 } : {}}
-            transition={{ delay: 0.8 }}
-          >
-            <span className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 bg-accent rounded-full" />
-              Notificações via WhatsApp
-            </span>
-            <span className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 bg-gold rounded-full" />
-              Acesso antecipado
-            </span>
-            <span className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 bg-primary rounded-full" />
-              Conteúdo exclusivo
-            </span>
-          </motion.div>
-        </motion.div>
+              <Button 
+                type="submit"
+                variant="hero" 
+                size="hero-lg"
+                className="w-full"
+                disabled={isSubmitting || isVerifying}
+              >
+                {isVerifying ? (
+                  <span className="flex items-center gap-3">
+                    <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                    </svg>
+                    Verificando...
+                  </span>
+                ) : isSubmitting ? (
+                  <span className="flex items-center gap-3">
+                    <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                    </svg>
+                    Entrando...
+                  </span>
+                ) : (
+                  "Entrar na lista exclusiva"
+                )}
+              </Button>
+
+              <p className="text-sm text-warm-gray/70 mt-6">
+                Sem spam. Apenas propósito, lançamentos e identidade.
+              </p>
+            </form>
+          )}
+        </div>
       </div>
 
-      {/* Bottom Decoration */}
-      <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-gold/30 to-transparent" />
+      {/* Footer */}
+      <div className="relative z-10 mt-24 text-center animate-fade-up animation-delay-500">
+        <p className="font-display italic text-2xl text-warm-gray mb-2">
+          BOREH
+        </p>
+        <p className="text-sm text-warm-gray/60 uppercase tracking-widest">
+          O Criador
+        </p>
+      </div>
     </section>
   );
 };
