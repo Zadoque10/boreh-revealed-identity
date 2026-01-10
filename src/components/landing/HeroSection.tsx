@@ -74,14 +74,14 @@ const HeroSection = () => {
           BOREH
         </motion.h1>
 
-        <motion.p
+        {/* <motion.p
           className="font-display text-xl md:text-2xl uppercase tracking-[0.3em] text-primary mb-8"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1, delay: 0.5 }}
         >
           O Criador
-        </motion.p>
+        </motion.p> */}
 
         <motion.div
           className="max-w-2xl mx-auto mb-12"
@@ -110,23 +110,23 @@ const HeroSection = () => {
             Conheça o Propósito
           </Button>
         </motion.div>
-
-        {/* Scroll Indicator */}
-        <motion.div
-          className="absolute bottom-10 left-1/2 -translate-x-1/2"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.5 }}
-        >
-          <motion.div
-            className="w-6 h-10 border-2 border-foreground/30 rounded-full flex justify-center pt-2"
-            animate={{ y: [0, 5, 0] }}
-            transition={{ duration: 1.5, repeat: Infinity }}
-          >
-            <motion.div className="w-1.5 h-1.5 bg-foreground/50 rounded-full" />
-          </motion.div>
-        </motion.div>
       </div>
+
+      {/* Scroll Indicator */}
+      <motion.div
+        className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.5 }}
+      >
+        <motion.div
+          className="w-6 h-10 border-2 border-foreground/30 rounded-full flex justify-center pt-2"
+          animate={{ y: [0, 5, 0] }}
+          transition={{ duration: 1.5, repeat: Infinity }}
+        >
+          <motion.div className="w-1.5 h-1.5 bg-foreground/50 rounded-full" />
+        </motion.div>
+      </motion.div>
     </section>
   );
 };

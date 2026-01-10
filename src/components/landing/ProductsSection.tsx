@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
 import { useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import tshirt1 from "@/assets/tshirt-1.jpg";
 import tshirt2 from "@/assets/tshirt-2.jpg";
@@ -87,11 +88,26 @@ const ProductCard = ({ product, index }: { product: typeof products[0]; index: n
 };
 
 const ProductsSection = () => {
+  const navigate = useNavigate();
   const titleRef = useRef(null);
   const titleInView = useInView(titleRef, { once: true, margin: "-100px" });
 
+  const scrollToWaitlist = () => {
+    const waitlistSection = document.getElementById("waitlist-form");
+    if (waitlistSection) {
+      waitlistSection.scrollIntoView({ 
+        behavior: "smooth",
+        block: "start"
+      });
+    }
+  };
+
+  const handleVerColecaoCompleta = () => {
+    navigate("/colecao-completa");
+  };
+
   return (
-    <section className="py-24 md:py-40 bg-background grain relative overflow-hidden">
+    <section id="products-section" className="py-24 md:py-40 bg-background grain relative overflow-hidden">
       {/* Decorative Elements */}
       <motion.div
         className="absolute top-1/4 -left-20 w-40 h-40 border border-gold/10 rounded-full"
@@ -140,9 +156,14 @@ const ProductsSection = () => {
           viewport={{ once: true }}
           transition={{ duration: 1, delay: 0.5 }}
         >
-          <Button variant="hero-outline" size="xl">
-            Ver Coleção Completa
-          </Button>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <Button variant="hero-outline" size="xl" onClick={handleVerColecaoCompleta}>
+              Ver Coleção Completa
+            </Button>
+            <Button variant="hero" size="xl" onClick={scrollToWaitlist}>
+              Entrar na Lista
+            </Button>
+          </div>
         </motion.div>
       </div>
     </section>
