@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import { toast } from "sonner";
 
 const Footer = () => {
@@ -19,12 +18,7 @@ const Footer = () => {
       <div className="container mx-auto px-6 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8 mb-16">
           {/* Brand */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-          >
+          <div className="animate-fade-up">
             <h3 className="font-display text-4xl md:text-5xl font-bold mb-4">
               BOREH
             </h3>
@@ -34,16 +28,10 @@ const Footer = () => {
             <p className="font-body text-background/50 mt-4 max-w-xs">
               Moda como expressão de identidade. Criados para mais do que existe.
             </p>
-          </motion.div>
+          </div>
 
           {/* Links */}
-          <motion.div
-            className="md:text-center"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.1 }}
-          >
+          <div className="md:text-center animate-fade-up animation-delay-100">
             <h4 className="font-display text-sm uppercase tracking-[0.3em] text-background/50 mb-6">
               Navegação
             </h4>
@@ -59,7 +47,7 @@ const Footer = () => {
                 </a>
               </li>
               <li>
-                <a href="#colecao" className="font-body text-background/70 hover:text-background transition-colors duration-300">
+                <a href="#products-section" className="font-body text-background/70 hover:text-background transition-colors duration-300">
                   Coleção
                 </a>
               </li>
@@ -74,16 +62,10 @@ const Footer = () => {
                 </a>
               </li>
             </ul>
-          </motion.div>
+          </div>
 
           {/* Social */}
-          <motion.div
-            className="md:text-right"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-          >
+          <div className="md:text-right animate-fade-up animation-delay-200">
             <h4 className="font-display text-sm uppercase tracking-[0.3em] text-background/50 mb-6">
               Conecte-se
             </h4>
@@ -111,20 +93,14 @@ const Footer = () => {
                 </li>
               ))}
             </ul>
-          </motion.div>
+          </div>
         </div>
 
         {/* Divider */}
         <div className="w-full h-px bg-gradient-to-r from-transparent via-background/20 to-transparent mb-12" />
 
         {/* Bottom */}
-        <motion.div
-          className="flex flex-col md:flex-row items-center justify-between gap-6"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.3 }}
-        >
+        <div className="flex flex-col md:flex-row items-center justify-between gap-6 animate-fade-up animation-delay-300">
           {/* Final Quote */}
           <div className="text-center md:text-left">
             <p className="font-body text-xl md:text-2xl italic text-background/80">
@@ -141,20 +117,14 @@ const Footer = () => {
               © 2025 BOREH. Todos os direitos reservados.
             </p>
           </div>
-        </motion.div>
+        </div>
 
         {/* Large Brand Mark */}
-        <motion.div
-          className="mt-16 text-center"
-          initial={{ opacity: 0, scale: 0.9 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1, delay: 0.4 }}
-        >
+        <div className="mt-16 text-center animate-fade-up animation-delay-400">
           <span className="font-display text-6xl md:text-8xl font-bold text-background/5">
             BOREH
           </span>
-        </motion.div>
+        </div>
       </div>
     </footer>
   );

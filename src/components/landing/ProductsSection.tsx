@@ -1,15 +1,9 @@
-import { motion } from "framer-motion";
-import { useInView } from "framer-motion";
-import { useRef } from "react";
 import { Button } from "@/components/ui/button";
 import collection1 from "@/assets/collection-1.png";
 import collection2 from "@/assets/collection-2.png";
 import tshirtBack from "@/assets/tshirt-back.png";
 
 const ProductsSection = () => {
-  const titleRef = useRef(null);
-  const titleInView = useInView(titleRef, { once: true, margin: "-100px" });
-
   const scrollToWaitlist = () => {
     const waitlistSection = document.getElementById("waitlist");
     if (waitlistSection) {
@@ -28,53 +22,26 @@ const ProductsSection = () => {
     <section id="products-section" className="relative py-24 md:py-32 px-4 overflow-hidden bg-background grain">
       {/* Section Header */}
       <div className="max-w-6xl mx-auto mb-16 md:mb-24">
-        <motion.div
-          ref={titleRef}
-          className="flex items-end justify-between flex-wrap gap-4"
-          initial={{ opacity: 0, y: 30 }}
-          animate={titleInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8 }}
-        >
+        <div className="flex items-end justify-between flex-wrap gap-4 animate-fade-up">
           <div>
-            <motion.span
-              className="font-display text-sm uppercase tracking-[0.5em] text-muted-foreground mb-4 block"
-              initial={{ opacity: 0 }}
-              animate={titleInView ? { opacity: 1 } : {}}
-              transition={{ delay: 0.1 }}
-            >
+            <span className="font-display text-sm uppercase tracking-[0.5em] text-muted-foreground mb-4 block animate-fade-up animation-delay-100">
               Coleção
-            </motion.span>
-            <motion.h2
-              className="font-display text-4xl md:text-6xl lg:text-7xl font-bold text-foreground leading-tight"
-              initial={{ opacity: 0, y: 20 }}
-              animate={titleInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: 0.2 }}
-            >
+            </span>
+            <h2 className="font-display text-4xl md:text-6xl lg:text-7xl font-bold text-foreground leading-tight animate-fade-up animation-delay-200">
               Em Breve
-            </motion.h2>
+            </h2>
           </div>
-          <motion.p
-            className="font-body text-lg text-muted-foreground max-w-md"
-            initial={{ opacity: 0, y: 20 }}
-            animate={titleInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ delay: 0.3 }}
-          >
+          <p className="font-body text-lg text-muted-foreground max-w-md animate-fade-up animation-delay-300">
             Peças que carregam significado. Feitas para quem entende que vestir é declarar.
-          </motion.p>
-        </motion.div>
+          </p>
+        </div>
       </div>
 
       {/* Editorial Grid */}
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-8">
           {/* Card 1 - Large */}
-          <motion.div
-            className="md:col-span-7 group"
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.1 }}
-          >
+          <div className="md:col-span-7 group animate-fade-up animation-delay-100">
             <div className="relative rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2">
               <div className="aspect-[4/5] md:aspect-[3/4]">
                 <img
@@ -94,18 +61,12 @@ const ProductsSection = () => {
                 </h3>
               </div>
             </div>
-          </motion.div>
+          </div>
 
           {/* Card 2 + 3 Stacked */}
           <div className="md:col-span-5 flex flex-col gap-6 md:gap-8">
             {/* Card 2 */}
-            <motion.div
-              className="group flex-1"
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-            >
+            <div className="group flex-1 animate-fade-up animation-delay-200">
               <div className="relative rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 h-full">
                 <div className="aspect-square md:aspect-auto md:h-full">
                   <img
@@ -122,16 +83,10 @@ const ProductsSection = () => {
                   </span>
                 </div>
               </div>
-            </motion.div>
+            </div>
 
             {/* Card 3 */}
-            <motion.div
-              className="group flex-1"
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.3 }}
-            >
+            <div className="group flex-1 animate-fade-up animation-delay-300">
               <div className="relative rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 h-full">
                 <div className="aspect-square md:aspect-auto md:h-full bg-muted">
                   <img
@@ -148,19 +103,13 @@ const ProductsSection = () => {
                   </span>
                 </div>
               </div>
-            </motion.div>
+            </div>
           </div>
         </div>
       </div>
 
       {/* CTAs */}
-      <motion.div
-        className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-16"
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.8, delay: 0.4 }}
-      >
+      <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-16 animate-fade-up animation-delay-400">
         <Button
           variant="hero"
           size="xl"
@@ -177,7 +126,7 @@ const ProductsSection = () => {
         >
           Sobre a coleção
         </Button>
-      </motion.div>
+      </div>
     </section>
   );
 };

@@ -71,7 +71,7 @@ const HeroSection = () => {
       </div>
 
       {/* Scroll Indicator */}
-      <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 animate-fade-in animation-delay-500">
+      <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 z-20 animate-fade-in animation-delay-500">
         <div className="flex flex-col items-center gap-2 text-warm-gray">
           <span className="text-xs uppercase tracking-widest">Explore</span>
           <div className="w-px h-12 bg-gradient-to-b from-warm-gray to-transparent" />
