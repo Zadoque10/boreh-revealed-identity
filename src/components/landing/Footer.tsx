@@ -22,9 +22,6 @@ const Footer = () => {
             <h3 className="font-display text-4xl md:text-5xl font-bold mb-4">
               BOREH
             </h3>
-            <p className="font-body text-lg text-background/70 italic">
-              O Criador
-            </p>
             <p className="font-body text-background/50 mt-4 max-w-xs">
               Moda como expressão de identidade. Criados para mais do que existe.
             </p>

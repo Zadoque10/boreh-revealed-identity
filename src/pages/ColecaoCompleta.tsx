@@ -141,7 +141,7 @@ const ColecaoCompleta = () => {
 
   return (
     <main className="overflow-hidden">
-      <section className="py-24 md:py-32 bg-background grain relative overflow-hidden">
+      <section className="pt-32 md:pt-40 pb-24 md:pb-32 bg-background grain relative overflow-hidden">
         <div className="container mx-auto px-4 md:px-6">
           {/* Header */}
           <motion.div

@@ -91,7 +91,7 @@ const ManifestoSection = () => {
             {/* Closing */}
             <div className="text-center pt-8 animate-fade-up animation-delay-500">
               <p className="font-display italic text-2xl md:text-3xl text-warm-gray">
-                BOREH — O Criador
+                BOREH
               </p>
             </div>
           </div>

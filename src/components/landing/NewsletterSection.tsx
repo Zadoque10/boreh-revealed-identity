@@ -309,9 +309,6 @@ const NewsletterSection = () => {
         <p className="font-display italic text-2xl text-warm-gray mb-2">
           BOREH
         </p>
-        <p className="text-sm text-warm-gray/60 uppercase tracking-widest">
-          O Criador
-        </p>
       </div>
     </section>
   );

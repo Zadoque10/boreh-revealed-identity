@@ -11,7 +11,7 @@ const HeroSection = () => {
   };
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center px-4 py-20 overflow-hidden">
+    <section className="relative min-h-screen flex items-center justify-center px-4 pt-24 md:pt-28 pb-20 overflow-hidden">
       {/* Background Texture */}
       <div className="absolute inset-0 texture-grain" />
       
@@ -34,12 +34,6 @@ const HeroSection = () => {
 
           {/* Main Typography */}
           <div className="text-center space-y-6">
-            <h1 className="text-editorial animate-fade-up animation-delay-100">
-              <span className="block font-display italic text-warm-gray text-2xl md:text-3xl lg:text-4xl mb-2">
-                O Criador
-              </span>
-            </h1>
-
             <p className="text-statement text-foreground/80 max-w-2xl mx-auto animate-fade-up animation-delay-200">
               Moda, identidade e propósito.
             </p>
