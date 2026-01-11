@@ -1,9 +1,12 @@
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 import collection1 from "@/assets/collection-1.png";
 import collection2 from "@/assets/collection-2.png";
 import tshirtBack from "@/assets/tshirt-back.png";
 
 const ProductsSection = () => {
+  const navigate = useNavigate();
+
   const scrollToWaitlist = () => {
     const waitlistSection = document.getElementById("waitlist");
     if (waitlistSection) {
@@ -11,11 +14,8 @@ const ProductsSection = () => {
     }
   };
 
-  const scrollToQuality = () => {
-    const qualitySection = document.getElementById("quality");
-    if (qualitySection) {
-      qualitySection.scrollIntoView({ behavior: "smooth" });
-    }
+  const handleSobreColecao = () => {
+    navigate("/colecao-completa");
   };
 
   return (
@@ -121,7 +121,7 @@ const ProductsSection = () => {
         <Button
           variant="hero-outline"
           size="xl"
-          onClick={scrollToQuality}
+          onClick={handleSobreColecao}
           className="rounded-2xl"
         >
           Sobre a coleção
