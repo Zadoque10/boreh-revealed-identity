@@ -1,7 +1,10 @@
 import { Button } from "@/components/ui/button";
+import { useLanguage } from "@/contexts/LanguageContext";
 import borehLogo from "@/assets/boreh-logo.png";
 
 const HeroSection = () => {
+  const { t } = useLanguage();
+
   const scrollToWaitlist = () => {
     document.getElementById("waitlist")?.scrollIntoView({ behavior: "smooth" });
   };
@@ -35,12 +38,12 @@ const HeroSection = () => {
           {/* Main Typography */}
           <div className="text-center space-y-6">
             <p className="text-statement text-foreground/80 max-w-2xl mx-auto animate-fade-up animation-delay-200">
-              Moda, identidade e propósito.
+              {t.hero.tagline}
             </p>
 
             <p className="text-xl md:text-2xl text-warm-gray font-light max-w-xl mx-auto animate-fade-up animation-delay-300">
-              Criados para ser.<br />
-              <span className="font-medium">Não para repetir.</span>
+              {t.hero.subtitle}<br />
+              <span className="font-medium">{t.hero.subtitleBold}</span>
             </p>
           </div>
 
@@ -51,14 +54,14 @@ const HeroSection = () => {
               size="hero"
               onClick={scrollToWaitlist}
             >
-              Entrar na lista
+              {t.hero.ctaWaitlist}
             </Button>
             <Button 
               variant="hero-outline" 
               size="hero"
               onClick={scrollToManifesto}
             >
-              Quem somos
+              {t.hero.ctaAbout}
             </Button>
           </div>
         </div>
@@ -67,7 +70,7 @@ const HeroSection = () => {
       {/* Scroll Indicator */}
       <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 z-20 animate-fade-in animation-delay-500">
         <div className="flex flex-col items-center gap-2 text-warm-gray">
-          <span className="text-xs uppercase tracking-widest">Explore</span>
+          <span className="text-xs uppercase tracking-widest">{t.hero.explore}</span>
           <div className="w-px h-12 bg-gradient-to-b from-warm-gray to-transparent" />
         </div>
       </div>

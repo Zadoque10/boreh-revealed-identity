@@ -1,11 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import { useLanguage } from "@/contexts/LanguageContext";
 import collection1 from "@/assets/collection-1.png";
 import collection2 from "@/assets/collection-2.png";
 import tshirtBack from "@/assets/tshirt-back.png";
 
 const ProductsSection = () => {
   const navigate = useNavigate();
+  const { t } = useLanguage();
 
   const scrollToWaitlist = () => {
     const waitlistSection = document.getElementById("waitlist");
@@ -25,14 +27,14 @@ const ProductsSection = () => {
         <div className="flex items-end justify-between flex-wrap gap-4 animate-fade-up">
           <div>
             <span className="font-display text-sm uppercase tracking-[0.5em] text-muted-foreground mb-4 block animate-fade-up animation-delay-100">
-              Coleção
+              {t.products.collection}
             </span>
             <h2 className="font-display text-4xl md:text-6xl lg:text-7xl font-bold text-foreground leading-tight animate-fade-up animation-delay-200">
-              Em Breve
+              {t.products.comingSoon}
             </h2>
           </div>
           <p className="font-body text-lg text-muted-foreground max-w-md animate-fade-up animation-delay-300">
-            Peças que carregam significado. Feitas para quem entende que vestir é declarar.
+            {t.products.description}
           </p>
         </div>
       </div>
@@ -54,7 +56,7 @@ const ProductsSection = () => {
               <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 via-transparent to-transparent" />
               <div className="absolute bottom-0 left-0 right-0 p-6 md:p-10">
                 <span className="inline-block bg-background/90 backdrop-blur-md border border-border/50 rounded-2xl px-4 py-2 text-sm font-semibold uppercase tracking-[0.2em] mb-4 shadow-lg">
-                  Em Breve
+                  {t.products.comingSoon}
                 </span>
                 <h3 className="font-display text-3xl md:text-4xl lg:text-5xl font-bold text-background">
                   Yahweh Collection
@@ -79,7 +81,7 @@ const ProductsSection = () => {
                 <div className="absolute inset-0 bg-gradient-to-t from-foreground/70 via-transparent to-transparent" />
                 <div className="absolute bottom-0 left-0 right-0 p-6">
                   <span className="inline-block bg-background/90 backdrop-blur-md border border-border/50 rounded-2xl px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] shadow-lg">
-                    Em Breve
+                    {t.products.comingSoon}
                   </span>
                 </div>
               </div>
@@ -99,7 +101,7 @@ const ProductsSection = () => {
                 <div className="absolute inset-0 bg-gradient-to-t from-foreground/60 via-transparent to-transparent" />
                 <div className="absolute bottom-0 left-0 right-0 p-6">
                   <span className="inline-block bg-background/90 backdrop-blur-md border border-border/50 rounded-2xl px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] shadow-lg">
-                    Premium Cotton
+                    {t.products.premiumCotton}
                   </span>
                 </div>
               </div>
@@ -116,7 +118,7 @@ const ProductsSection = () => {
           onClick={scrollToWaitlist}
           className="rounded-2xl"
         >
-          Entrar na lista
+          {t.products.ctaWaitlist}
         </Button>
         <Button
           variant="hero-outline"
@@ -124,7 +126,7 @@ const ProductsSection = () => {
           onClick={handleSobreColecao}
           className="rounded-2xl"
         >
-          Sobre a coleção
+          {t.products.ctaCollection}
         </Button>
       </div>
     </section>

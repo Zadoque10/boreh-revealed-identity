@@ -4,6 +4,7 @@ import { useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 import Footer from "@/components/landing/Footer";
 import {
   Carousel,
@@ -102,6 +103,7 @@ const LancamentoItem = ({ lancamento, index, imagens }: LancamentoItemProps & { 
 
 const ColecaoCompleta = () => {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const titleRef = useRef(null);
   const titleInView = useInView(titleRef, { once: true, margin: "-100px" });
 
@@ -127,14 +129,9 @@ const ColecaoCompleta = () => {
     id: 1,
     imagem: collection1,
     titulo: "Yahweh Collection",
-    subtitulo: "Lançamento Principal",
-    descricao: "A primeira coleção da BOREH representa a essência da marca. Cada peça foi cuidadosamente pensada para carregar significado e propósito. A Yahweh Collection é um manifesto visual sobre identidade, propósito e eternidade.",
-    detalhes: [
-      "Design minimalista com foco na mensagem",
-      "Tecidos premium selecionados para durabilidade",
-      "Produção limitada e exclusiva",
-      "Cada peça conta uma história única"
-    ]
+    subtitulo: t.collection.launch.subtitle,
+    descricao: t.collection.launch.description,
+    detalhes: t.collection.launch.details
   };
 
   const imagens = [collection1, collection2, tshirtBack];
@@ -152,13 +149,13 @@ const ColecaoCompleta = () => {
             transition={{ duration: 0.8 }}
           >
             <span className="font-display text-sm uppercase tracking-[0.5em] text-muted-foreground mb-4 block">
-              Coleção
+              {t.collection.label}
             </span>
             <h1 className="font-display text-4xl md:text-6xl lg:text-7xl font-bold text-foreground leading-tight mb-6">
-              Sobre a Coleção
+              {t.collection.title}
             </h1>
             <p className="font-body text-lg md:text-xl text-muted-foreground">
-              Descubra o lançamento principal da nossa coleção e entenda o significado por trás de cada peça.
+              {t.collection.description}
             </p>
           </motion.div>
 
@@ -181,7 +178,7 @@ const ColecaoCompleta = () => {
               className="gap-2 rounded-2xl"
             >
               <ArrowLeft className="w-5 h-5" />
-              Voltar
+              {t.collection.back}
             </Button>
           </motion.div>
         </div>

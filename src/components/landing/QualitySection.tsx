@@ -1,29 +1,9 @@
+import { useLanguage } from "@/contexts/LanguageContext";
 import tshirtFront from "@/assets/tshirt-front.png";
 
-const qualities = [
-  {
-    title: "Algodão Egípcio",
-    subtitle: "Pureza & Origem",
-    description: "Fibras longas, maciez incomparável. A excelência começa na escolha da matéria-prima.",
-  },
-  {
-    title: "Fibras Naturais",
-    subtitle: "Compromisso & Essência",
-    description: "Respirabilidade e conforto que só a natureza proporciona. Sem concessões.",
-  },
-  {
-    title: "Anti-Bolinhas",
-    subtitle: "Durabilidade",
-    description: "Tecnologia que preserva. Suas peças mantêm a aparência de novas por muito mais tempo.",
-  },
-  {
-    title: "Conforto Premium",
-    subtitle: "Experiência Sensorial",
-    description: "Vestir bem é sentir bem. Cada detalhe pensado para o seu conforto absoluto.",
-  },
-];
-
 const QualitySection = () => {
+  const { t } = useLanguage();
+  const qualities = t.quality.qualities;
   return (
     <section id="quality" className="relative py-24 md:py-32 px-4 overflow-hidden">
       {/* Background */}
@@ -34,12 +14,12 @@ const QualitySection = () => {
         {/* Section Header */}
         <div className="text-center mb-16 md:mb-24">
           <span className="text-sm uppercase tracking-[0.3em] text-warm-gray mb-4 block animate-fade-up">
-            Matéria-Prima
+            {t.quality.sectionLabel}
           </span>
           <h2 className="text-statement mb-6 animate-fade-up animation-delay-100">
-            Qualidade é identidade
+            {t.quality.title}
             <br />
-            <span className="font-display italic text-warm-gray">materializada.</span>
+            <span className="font-display italic text-warm-gray">{t.quality.titleItalic}</span>
           </h2>
         </div>
 
@@ -56,8 +36,8 @@ const QualitySection = () => {
             </div>
             {/* Floating Badge */}
             <div className="absolute -bottom-4 -right-4 md:-bottom-6 md:-right-6 glass-strong rounded-editorial px-6 py-4 shadow-elevated">
-              <span className="text-xs uppercase tracking-widest text-warm-gray block">Premium</span>
-              <span className="font-semibold">100% Cotton</span>
+              <span className="text-xs uppercase tracking-widest text-warm-gray block">{t.quality.premium}</span>
+              <span className="font-semibold">{t.quality.cotton}</span>
             </div>
           </div>
 

@@ -1,6 +1,8 @@
 import { toast } from "sonner";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const Footer = () => {
+  const { t } = useLanguage();
   const socialLinks = [
     { name: "Instagram", url: "https://www.instagram.com/boreh.company?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" },
     { name: "TikTok", url: "#" }, // Link será adicionado quando disponível
@@ -23,29 +25,29 @@ const Footer = () => {
               BOREH
             </h3>
             <p className="font-body text-background/50 mt-4 max-w-xs">
-              Moda como expressão de identidade. Criados para mais do que existe.
+              {t.footer.tagline}
             </p>
           </div>
 
           {/* Links */}
           <div className="md:text-center animate-fade-up animation-delay-100">
             <h4 className="font-display text-sm uppercase tracking-[0.3em] text-background/50 mb-6">
-              Navegação
+              {t.footer.navigation}
             </h4>
             <ul className="space-y-3">
               <li>
                 <a href="#manifesto" className="font-body text-background/70 hover:text-background transition-colors duration-300">
-                  Manifesto
+                  {t.footer.manifesto}
                 </a>
               </li>
               <li>
                 <a href="#quality" className="font-body text-background/70 hover:text-background transition-colors duration-300">
-                  Qualidade
+                  {t.footer.quality}
                 </a>
               </li>
               <li>
                 <a href="#products-section" className="font-body text-background/70 hover:text-background transition-colors duration-300">
-                  Coleção
+                  {t.footer.collection}
                 </a>
               </li>
               <li>
@@ -55,7 +57,7 @@ const Footer = () => {
                   rel="noopener noreferrer"
                   className="font-body text-background/70 hover:text-background transition-colors duration-300"
                 >
-                  Contato
+                  {t.footer.contact}
                 </a>
               </li>
             </ul>
@@ -64,7 +66,7 @@ const Footer = () => {
           {/* Social */}
           <div className="md:text-right animate-fade-up animation-delay-200">
             <h4 className="font-display text-sm uppercase tracking-[0.3em] text-background/50 mb-6">
-              Conecte-se
+              {t.footer.connect}
             </h4>
             <ul className="space-y-3">
               {socialLinks.map((link) => (
@@ -76,7 +78,7 @@ const Footer = () => {
                     onClick={(e) => {
                       if (link.name === "TikTok") {
                         e.preventDefault();
-                        toast("Em breve", {
+                        toast(t.footer.comingSoon, {
                           duration: 2000,
                           position: "top-center",
                         });
@@ -101,17 +103,17 @@ const Footer = () => {
           {/* Final Quote */}
           <div className="text-center md:text-left">
             <p className="font-body text-xl md:text-2xl italic text-background/80">
-              "Criados para mais."
+              {t.footer.quote}
             </p>
             <p className="font-display text-sm uppercase tracking-[0.2em] text-background/40 mt-2">
-              Boreh aponta para o eterno
+              {t.footer.quoteSubtitle}
             </p>
           </div>
 
           {/* Copyright */}
           <div className="text-center md:text-right">
             <p className="font-display text-xs uppercase tracking-[0.2em] text-background/30">
-              © 2025 BOREH. Todos os direitos reservados.
+              {t.footer.copyright}
             </p>
           </div>
         </div>

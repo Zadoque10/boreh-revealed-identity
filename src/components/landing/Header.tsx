@@ -1,9 +1,16 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Search, ShoppingBag } from "lucide-react";
+import { Menu, X, Search, ShoppingBag, Globe, Check } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useLanguage } from "@/contexts/LanguageContext";
 import borehLogo from "@/assets/logo-boreh.png";
 import { cn } from "@/lib/utils";
 
@@ -12,6 +19,7 @@ const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
   const isMobile = useIsMobile();
+  const { language, setLanguage, t } = useLanguage();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -23,11 +31,11 @@ const Header = () => {
   }, []);
 
   const navItems = [
-    { label: "Início", href: "/", scrollTo: null },
-    { label: "Coleção", href: "/colecao-completa", scrollTo: null },
-    { label: "Matéria Prima", href: "/", scrollTo: "materia-prima" },
-    { label: "Manifesto", href: "/", scrollTo: "manifesto" },
-    { label: "Sobre", href: "/", scrollTo: "quality" },
+    { label: t.header.nav.inicio, href: "/", scrollTo: null },
+    { label: t.header.nav.colecao, href: "/colecao-completa", scrollTo: null },
+    { label: t.header.nav.materiaPrima, href: "/", scrollTo: "materia-prima" },
+    { label: t.header.nav.manifesto, href: "/", scrollTo: "manifesto" },
+    { label: t.header.nav.sobre, href: "/", scrollTo: "quality" },
   ];
 
   const handleNavClick = (e: React.MouseEvent, item: typeof navItems[0]) => {
@@ -130,12 +138,86 @@ const Header = () => {
 
           {/* Right Side Actions */}
           <div className="flex items-center gap-4">
+            {/* Language Selector */}
+            <div className="relative">
+              <DropdownMenu modal={false}>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-9 w-9 rounded-full hover:bg-muted/50 transition-all duration-200 hover:scale-105 active:scale-95 relative group"
+                    aria-label="Language"
+                  >
+                    <Globe className="h-4 w-4 transition-transform duration-200 group-data-[state=open]:rotate-12" />
+                    {/* Badge indicando idioma atual */}
+                    <span className="absolute -top-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-charcoal border border-background text-[8px] flex items-center justify-center text-off-white font-bold pointer-events-none">
+                      {language.toUpperCase().charAt(0)}
+                    </span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent 
+                  align="end" 
+                  sideOffset={10}
+                  alignOffset={-5}
+                  className="min-w-[150px] backdrop-blur-md bg-background/95 border-border/50 shadow-xl rounded-lg"
+                  onOpenAutoFocus={(e) => e.preventDefault()}
+                  onCloseAutoFocus={(e) => e.preventDefault()}
+                  side="bottom"
+                >
+                  <DropdownMenuItem
+                    onSelect={(e) => {
+                      e.preventDefault();
+                      setLanguage("pt");
+                    }}
+                    className={cn(
+                      "cursor-pointer transition-all duration-150 rounded-md",
+                      language === "pt" 
+                        ? "bg-accent/50 font-semibold" 
+                        : "hover:bg-accent/30"
+                    )}
+                  >
+                    <div className="flex items-center justify-between w-full">
+                      <span className="flex items-center gap-2">
+                        <span className="text-xs font-mono text-muted-foreground">PT</span>
+                        <span>Português</span>
+                      </span>
+                      {language === "pt" && (
+                        <Check className="h-4 w-4 text-charcoal ml-2" />
+                      )}
+                    </div>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onSelect={(e) => {
+                      e.preventDefault();
+                      setLanguage("en");
+                    }}
+                    className={cn(
+                      "cursor-pointer transition-all duration-150 rounded-md",
+                      language === "en" 
+                        ? "bg-accent/50 font-semibold" 
+                        : "hover:bg-accent/30"
+                    )}
+                  >
+                    <div className="flex items-center justify-between w-full">
+                      <span className="flex items-center gap-2">
+                        <span className="text-xs font-mono text-muted-foreground">EN</span>
+                        <span>English</span>
+                      </span>
+                      {language === "en" && (
+                        <Check className="h-4 w-4 text-charcoal ml-2" />
+                      )}
+                    </div>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+
             {/* Search Icon */}
             <Button
               variant="ghost"
               size="icon"
               className="h-9 w-9 rounded-full hover:bg-muted/50 transition-colors"
-              aria-label="Buscar"
+              aria-label={t.header.search}
             >
               <Search className="h-4 w-4" />
             </Button>
@@ -145,7 +227,7 @@ const Header = () => {
               variant="ghost"
               size="icon"
               className="h-9 w-9 rounded-full hover:bg-muted/50 transition-colors relative"
-              aria-label="Carrinho"
+              aria-label={t.header.cart}
             >
               <ShoppingBag className="h-4 w-4" />
               {/* Badge for cart count - can be added later */}
@@ -218,6 +300,43 @@ const Header = () => {
                     {/* Mobile Footer */}
                     <div className="mt-auto pt-8 border-t border-border">
                       <div className="flex flex-col gap-4">
+                        {/* Language Selector Mobile */}
+                        <div className="flex items-center justify-between pb-4 border-b border-border/50">
+                          <div className="flex items-center gap-2">
+                            <Globe className="h-4 w-4 text-muted-foreground" />
+                            <span className="text-sm text-muted-foreground uppercase tracking-wider">Idioma</span>
+                          </div>
+                          <div className="flex gap-1 bg-muted/50 rounded-lg p-1">
+                            <button
+                              onClick={() => {
+                                setLanguage("pt");
+                                setIsMobileMenuOpen(false);
+                              }}
+                              className={cn(
+                                "px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 min-w-[60px]",
+                                language === "pt"
+                                  ? "bg-background text-foreground shadow-sm"
+                                  : "text-muted-foreground hover:text-foreground"
+                              )}
+                            >
+                              PT
+                            </button>
+                            <button
+                              onClick={() => {
+                                setLanguage("en");
+                                setIsMobileMenuOpen(false);
+                              }}
+                              className={cn(
+                                "px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 min-w-[60px]",
+                                language === "en"
+                                  ? "bg-background text-foreground shadow-sm"
+                                  : "text-muted-foreground hover:text-foreground"
+                              )}
+                            >
+                              EN
+                            </button>
+                          </div>
+                        </div>
                         <a
                           href="https://www.instagram.com/boreh.company?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="
                           target="_blank"

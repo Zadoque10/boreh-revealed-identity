@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { 
   applyPhoneMask, 
   isValidBrazilianPhone, 
@@ -11,6 +12,7 @@ import { submitToGoogleSheets } from "@/lib/googleSheets";
 import { CloudflareTurnstile, CloudflareTurnstileRef } from "@/components/CloudflareTurnstile";
 
 const NewsletterSection = () => {
+  const { t } = useLanguage();
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [phoneError, setPhoneError] = useState("");
@@ -68,7 +70,7 @@ const NewsletterSection = () => {
       setTurnstileToken(null);
       pendingSubmitRef.current = false;
     } catch (error) {
-      setPhoneError("Erro ao processar. Tente novamente.");
+      setPhoneError(t.newsletter.errorMessage);
       // Reseta o Turnstile em caso de erro
       turnstileRef.current?.reset();
       setTurnstileToken(null);
@@ -112,23 +114,23 @@ const NewsletterSection = () => {
     
     // Valida nome
     if (!name.trim()) {
-      setNameError("Por favor, informe seu nome");
+      setNameError(t.newsletter.nameErrorRequired);
       return;
     }
 
     if (name.trim().length < 2) {
-      setNameError("O nome deve ter pelo menos 2 caracteres");
+      setNameError(t.newsletter.nameErrorMin);
       return;
     }
     
     // Valida telefone
     if (!phone) {
-      setPhoneError("Por favor, informe seu número de celular");
+      setPhoneError(t.newsletter.phoneErrorRequired);
       return;
     }
 
     if (!isValidBrazilianPhone(phone)) {
-      setPhoneError("Por favor, informe um número de celular válido");
+      setPhoneError(t.newsletter.phoneErrorInvalid);
       return;
     }
 
@@ -165,21 +167,21 @@ const NewsletterSection = () => {
           {/* Section Label */}
           <div className="mb-8 animate-fade-up">
             <span className="inline-block glass rounded-editorial px-6 py-3 text-xs uppercase tracking-[0.2em] text-warm-gray font-medium">
-              Acesso Exclusivo
+              {t.newsletter.label}
             </span>
           </div>
 
           {/* Heading */}
           <h2 className="text-statement mb-6 animate-fade-up animation-delay-100">
-            Lista de Espera
+            {t.newsletter.title}
             <br />
-            <span className="font-display italic text-warm-gray">Exclusiva BOREH</span>
+            <span className="font-display italic text-warm-gray">{t.newsletter.titleItalic}</span>
           </h2>
 
           {/* Subheading */}
           <p className="text-xl md:text-2xl text-warm-gray max-w-xl mx-auto mb-12 animate-fade-up animation-delay-200">
-            Para quem entende que<br />
-            <span className="font-medium text-foreground">identidade não se copia.</span>
+            {t.newsletter.subtitle}<br />
+            <span className="font-medium text-foreground">{t.newsletter.subtitleBold}</span>
           </p>
 
           {isSubmitted ? (
@@ -189,9 +191,9 @@ const NewsletterSection = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
               </div>
-              <h3 className="text-headline mb-4">Você está na lista!</h3>
+              <h3 className="text-headline mb-4">{t.newsletter.successTitle}</h3>
               <p className="text-warm-gray">
-                Fique atento ao seu WhatsApp. Novidades chegando em breve.
+                {t.newsletter.successMessage}
               </p>
             </div>
           ) : (
@@ -200,7 +202,7 @@ const NewsletterSection = () => {
                 <div>
                   <Input
                     type="text"
-                    placeholder="Nome completo"
+                    placeholder={t.newsletter.namePlaceholder}
                     value={name}
                     onChange={handleNameChange}
                     maxLength={100}
@@ -219,7 +221,7 @@ const NewsletterSection = () => {
                 <div>
                   <Input
                     type="tel"
-                    placeholder="WhatsApp (com DDD)"
+                    placeholder={t.newsletter.phonePlaceholder}
                     value={phone}
                     onChange={handlePhoneChange}
                     maxLength={15}
@@ -246,7 +248,7 @@ const NewsletterSection = () => {
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                       </svg>
-                      <span>Verificando segurança...</span>
+                      <span>{t.newsletter.verifying}</span>
                     </div>
                   )}
                   <div className="flex justify-center">
@@ -264,7 +266,7 @@ const NewsletterSection = () => {
 
               {turnstileError && (
                 <p className="text-sm text-red-500 text-center">
-                  Erro na verificação. Tente novamente.
+                  {t.newsletter.turnstileError}
                 </p>
               )}
 
@@ -281,7 +283,7 @@ const NewsletterSection = () => {
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                     </svg>
-                    Verificando...
+                    {t.newsletter.verifying}
                   </span>
                 ) : isSubmitting ? (
                   <span className="flex items-center gap-3">
@@ -289,15 +291,15 @@ const NewsletterSection = () => {
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                     </svg>
-                    Entrando...
+                    {t.newsletter.submitting}
                   </span>
                 ) : (
-                  "Entrar na lista exclusiva"
+                  t.newsletter.submitButton
                 )}
               </Button>
 
               <p className="text-sm text-warm-gray/70 mt-6">
-                Sem spam. Apenas propósito, lançamentos e identidade.
+                {t.newsletter.disclaimer}
               </p>
             </form>
           )}

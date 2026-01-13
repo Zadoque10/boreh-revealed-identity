@@ -1,4 +1,8 @@
+import { useLanguage } from "@/contexts/LanguageContext";
+
 const ManifestoSection = () => {
+  const { t } = useLanguage();
+
   return (
     <section id="manifesto" className="relative py-24 md:py-40 px-4 overflow-hidden">
       {/* Background Elements */}
@@ -16,7 +20,7 @@ const ManifestoSection = () => {
           {/* Section Label */}
           <div className="text-center mb-12 md:mb-20 animate-fade-up">
             <span className="text-sm uppercase tracking-[0.3em] text-warm-gray">
-              Manifesto
+              {t.manifesto.label}
             </span>
           </div>
 
@@ -25,9 +29,9 @@ const ManifestoSection = () => {
             {/* Opening Statement */}
             <div className="text-center animate-fade-up animation-delay-100">
               <h2 className="font-display italic text-4xl md:text-6xl lg:text-7xl text-foreground leading-tight">
-                "Magnum Opus
+                {t.manifesto.opening}
                 <br />
-                <span className="text-warm-gray">de Deus"</span>
+                <span className="text-warm-gray">{t.manifesto.openingItalic}</span>
               </h2>
             </div>
 
@@ -35,21 +39,18 @@ const ManifestoSection = () => {
             <div className="grid md:grid-cols-2 gap-12 md:gap-16 animate-fade-up animation-delay-200">
               <div className="space-y-6">
                 <p className="text-lg md:text-xl text-foreground/80 leading-relaxed">
-                  Você foi criado com propósito, moldado com intenção, 
-                  desenhado para deixar uma marca única no mundo.
+                  {t.manifesto.paragraph1}
                 </p>
                 <p className="text-lg md:text-xl text-foreground/80 leading-relaxed">
-                  A BOREH existe para te lembrar disso todos os dias. Cada peça que vestimos 
-                  carrega uma mensagem. Cada tecido conta uma história.
+                  {t.manifesto.paragraph2}
                 </p>
               </div>
               <div className="space-y-6">
                 <p className="text-lg md:text-xl text-foreground/80 leading-relaxed">
-                  Não fazemos moda para seguir tendências. Criamos para quem entende que 
-                  identidade não se copia — se constrói.
+                  {t.manifesto.paragraph3}
                 </p>
                 <p className="text-lg md:text-xl text-foreground/80 leading-relaxed">
-                  Para quem sabe que o que fazemos hoje ecoa pela eternidade.
+                  {t.manifesto.paragraph4}
                 </p>
               </div>
             </div>
@@ -59,9 +60,9 @@ const ManifestoSection = () => {
               <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-transparent via-charcoal to-transparent" />
               <blockquote className="pl-8 md:pl-12">
                 <p className="text-statement font-display italic text-foreground">
-                  O que fazemos
+                  {t.manifesto.quote}
                   <br />
-                  <span className="text-warm-gray">ecoa pela eternidade.</span>
+                  <span className="text-warm-gray">{t.manifesto.quoteItalic}</span>
                 </p>
               </blockquote>
             </div>
@@ -69,21 +70,21 @@ const ManifestoSection = () => {
             {/* Values Grid */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 animate-fade-up animation-delay-400">
               <div className="text-center p-6">
-                <h3 className="text-headline mb-4">Identidade</h3>
+                <h3 className="text-headline mb-4">{t.manifesto.values.identity.title}</h3>
                 <p className="text-warm-gray">
-                  Você não é mais um. Você é único. Sua história merece ser contada.
+                  {t.manifesto.values.identity.description}
                 </p>
               </div>
               <div className="text-center p-6">
-                <h3 className="text-headline mb-4">Propósito</h3>
+                <h3 className="text-headline mb-4">{t.manifesto.values.purpose.title}</h3>
                 <p className="text-warm-gray">
-                  Cada escolha é uma declaração. Cada peça, um lembrete do seu valor.
+                  {t.manifesto.values.purpose.description}
                 </p>
               </div>
               <div className="text-center p-6">
-                <h3 className="text-headline mb-4">Eternidade</h3>
+                <h3 className="text-headline mb-4">{t.manifesto.values.eternity.title}</h3>
                 <p className="text-warm-gray">
-                  O que construímos hoje permanece. Criamos legado, não tendências.
+                  {t.manifesto.values.eternity.description}
                 </p>
               </div>
             </div>
